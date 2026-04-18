@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Agroneew — Агро-маркет нового поколения</title>
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <!-- React + ReactDOM + Babel Standalone -->
+  <script src="https://cdn.jsdelivr.net/npm/react@18.2.0/umd/react.development.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/react-dom@18.2.0/umd/react-dom.development.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@babel/standalone/babel.min.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { overflow-x: hidden; }
+    ::-webkit-scrollbar { width: 3px; }
+    ::-webkit-scrollbar-thumb { background: #14b8a6; }
+    ::-webkit-scrollbar-track { background: #1e293b; }
+    @keyframes float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-22px); } }
+    @keyframes pulse-ring { 0% { transform: translate(-50%,-50%) scale(1); opacity: 0.5; } 100% { transform: translate(-50%,-50%) scale(2.8); opacity: 0; } }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(36px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes scan { 0%,100% { top: 0%; } 50% { top: 90%; } }
+    @keyframes flicker { 0%,100% { opacity: 1; } 92% { opacity: 0.8; } 94% { opacity: 1; } }
+    @keyframes cursor-blink { 0%,100% { opacity: 1; } 50% { opacity: 0; } }
+    @keyframes toast-in { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes slide-nav { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    button:focus { outline: none; }
+    input:focus { outline: 1px solid #14b8a6; outline-offset: -1px; }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script type="text/babel">
+    // ─────────────────────────────────────────────────────────────
+    //  CONSTANTS & THEME
+    // ─────────────────────────────────────────────────────────────
+    const ACCENT = "#14b8a6";      // основной бирюзовый акцент
+    const ACCENT_DARK = "#0f766e";
+    const BG_DARK = "#0a0c12";
+    const BG_LIGHT = "#f8fafc";
+    const FG_DARK = "#eef2ff";
+    const FG_LIGHT = "#0f172a";
+
+    // Данные продуктов (агро-семена, удобрения, технологии)
+    const PRODUCTS = [
+      { id: "AG-101", name: "Пшеница Злата", tagline: "Высокоурожайная озимая", description: "Сорт интенсивного типа с потенциалом 120 ц/га. Устойчив к засухе и болезням. Рекомендован для центральных регионов.", category: "Семена", price: 2450, tags: ["Пшеница", "Озимая", "Элит"], specs: { yield: 118, protein: 14.2, resistance: 8, origin: "НИИСХ" } },
+      { id: "AG-102", name: "Кукуруза Доминатор", tagline: "Силос + зерно", description: "Гибрид среднеранний. Отличная листостебельная масса и высокое содержание крахмала. Устойчив к фузариозу.", category: "Семена", price: 3800, tags: ["Кукуруза", "Силос", "Гибрид"], specs: { yield: 105, protein: 9.5, resistance: 9, origin: "США/Европа" } },
+      { id: "AG-103", name: "Подсолнечник Ясон", tagline: "Масличный линолевый", description: "Высокомасличный гибрид с содержанием масла до 52%. Иммунен к заразихе. Идеален для южных зон.", category: "Семена", price: 4900, tags: ["Подсолнечник", "Масличный", "Линолевый"], specs: { yield: 42, oil: 52, resistance: 9, origin: "Франция" } },
+      { id: "AG-104", name: "Картофель Колобок", tagline: "Столовый, урожайный", description: "Сорт среднего срока созревания. Клубни округлые, мякоть жёлтая. Устойчив к фитофторозу и парше.", category: "Семена", price: 1850, tags: ["Картофель", "Столовый", "Лежкий"], specs: { yield: 450, starch: 16, resistance: 8, origin: "Россия" } },
+      { id: "AG-105", name: "Соя Авангард", tagline: "Высокобелковая", description: "Раннеспелый сорт с содержанием белка до 42%. Подходит для пищевых и кормовых целей. Устойчив к нематоде.", category: "Семена", price: 6200, tags: ["Соя", "Белок", "Нематодоустойчивый"], specs: { yield: 38, protein: 42, resistance: 8, origin: "Канада" } },
+      { id: "AG-106", name: "Удобрение Агромикс", tagline: "NPK 15-15-15 + микро", description: "Комплексное гранулированное удобрение с медленным высвобождением. Повышает урожайность на 30%. Без хлора.", category: "Удобрения", price: 1250, tags: ["NPK", "Микроэлементы", "Пролонгированное"], specs: { n: 15, p: 15, k: 15, duration: 90 } },
+      { id: "AG-107", name: "Биостимулятор Экогрин", tagline: "Натуральный иммунитет", description: "На основе гуминовых кислот. Стимулирует корнеобразование, повышает стрессоустойчивость. Для всех культур.", category: "Биопрепараты", price: 890, tags: ["Гумат", "Органика", "Стресс"], specs: { humic: 18, amino: 5, application: "лист/корень" } },
+      { id: "AG-108", name: "Почвогрунт Универсал", tagline: "60 л, обогащённый", description: "Готовый грунт для рассады и овощей. PH нейтральный. Добавлен вермикулит и биогумус.", category: "Грунты", price: 450, tags: ["Грунт", "Рассада", "Биогумус"], specs: { volume: 60, ph: 6.8, organic: 45 } }
+    ];
+
+    // ─── ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ ────────────────────────────────
+    function getStars(rating) { return "★".repeat(rating) + "☆".repeat(5 - rating); }
+    function generateBarcode(id) {
+      let hash = 0;
+      for (let i = 0; i < id.length; i++) hash = ((hash << 5) - hash) + id.charCodeAt(i);
+      return Array.from({ length: 21 }, (_, r) => Array.from({ length: 21 }, (_, c) => ((hash ^ (r * 13 + c * 31)) % 3 === 0) ? 1 : 0));
+    }
+
+    // ─── АНИМИРОВАННЫЙ ЭЛЕМЕНТ (ЛИСТ / СЕМЯ) ─────────────────────
+    function SeedOrb({ size = 160, glow = true }) {
+      return React.createElement("div", { style: { position: "relative", width: size, height: size } },
+        React.createElement("div", { style: {
+          width: size, height: size, borderRadius: "50%",
+          background: `radial-gradient(circle at 30% 30%, ${ACCENT}cc, ${ACCENT}22 50%, ${ACCENT_DARK}00 80%)`,
+          boxShadow: glow ? `0 0 ${size * 0.4}px ${ACCENT}55, 0 ${size * 0.1}px ${size * 0.3}px rgba(0,0,0,0.5)` : "none",
+          display: "flex", alignItems: "center", justifyContent: "center"
+        } },
+          React.createElement("span", { style: { fontSize: size * 0.4, filter: "drop-shadow(0 4px 6px rgba(0,0,0,0.3))" } }, "🌱")
+        ),
+        glow && [0,1,2].map(i => React.createElement("div", { key: i, style: {
+          position: "absolute", top: "50%", left: "50%",
+          width: size, height: size, borderRadius: "50%",
+          border: `1.5px solid ${ACCENT}`,
+          transform: "translate(-50%, -50%)",
+          animation: `pulse-ring 3s ${i}s ease-out infinite`
+        } }))
+      );
+    }
+
+    // ─── КАРТОЧКА ТОВАРА ─────────────────────────────────────────
+    function ProductCard({ product, dark, fg, border, navigate, addToCart, style = {} }) {
+      const [hover, setHover] = React.useState(false);
+      return React.createElement("div", {
+        onMouseEnter: () => setHover(true), onMouseLeave: () => setHover(false),
+        style: {
+          background: dark ? "#111827" : "#ffffff", border: `1px solid ${hover ? ACCENT : border}`,
+          padding: 28, cursor: "pointer", position: "relative",
+          transform: hover ? "translateY(-8px)" : "none",
+          transition: "all 0.3s cubic-bezier(.2,.9,.4,1.1)",
+          boxShadow: hover ? `0 20px 40px rgba(0,0,0,0.2), 0 0 20px ${ACCENT}22` : "none",
+          borderRadius: 24, ...style
+        }
+      },
+        React.createElement("div", { style: { display: "inline-block", marginBottom: 20 } }, React.createElement(SeedOrb, { size: 70, glow: hover })),
+        React.createElement("div", { style: { fontFamily: "'Space Mono', monospace", fontSize: 10, letterSpacing: 2, color: ACCENT, marginBottom: 8 } }, product.category),
+        React.createElement("h3", { onClick: () => navigate("product", product), style: { fontSize: 22, fontWeight: 600, marginBottom: 8, letterSpacing: -0.3, color: fg } }, product.name),
+        React.createElement("p", { style: { fontSize: 13, color: dark ? "#9ca3af" : "#4b5563", lineHeight: 1.5, marginBottom: 24 } }, product.tagline),
+        React.createElement("div", { style: { display: "flex", justifyContent: "space-between", alignItems: "center" } },
+          React.createElement("span", { style: { fontSize: 20, fontWeight: 600, color: ACCENT } }, `${product.price.toLocaleString()} ₽`),
+          React.createElement("div", { style: { display: "flex", gap: 8 } },
+            React.createElement("button", { onClick: () => navigate("product", product), style: { padding: "6px 14px", background: "transparent", border: `1px solid ${border}`, color: fg, fontSize: 10, letterSpacing: 1, borderRadius: 40, cursor: "pointer" } }, "ДЕТАЛИ"),
+            React.createElement("button", { onClick: () => addToCart(product), style: { padding: "6px 14px", background: ACCENT, border: "none", color: "#000", fontSize: 10, fontWeight: 700, borderRadius: 40, cursor: "pointer" } }, "+ В КОРЗИНУ")
+          )
+        )
+      );
+    }
+
+    // ─── ГЛАВНАЯ СТРАНИЦА ────────────────────────────────────────
+    function HomePage({ dark, fg, border, products, navigate, addToCart }) {
+      const [scrollY, setScrollY] = React.useState(0);
+      React.useEffect(() => { const h = () => setScrollY(window.scrollY); window.addEventListener("scroll", h); return () => window.removeEventListener("scroll", h); }, []);
+      const muted = dark ? "#9ca3af" : "#4b5563";
+      return React.createElement("div", null,
+        React.createElement("section", { style: { minHeight: "100vh", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", position: "relative", overflow: "hidden", paddingTop: 64 } },
+          React.createElement("div", { style: { position: "absolute", inset: 0, backgroundImage: `radial-gradient(circle at 20% 40%, ${ACCENT}11 0%, transparent 60%)`, transform: `translateY(${scrollY * 0.2}px)` } }),
+          React.createElement("div", { style: { animation: "float 6s ease-in-out infinite", marginBottom: 40 } }, React.createElement(SeedOrb, { size: 200 })),
+          React.createElement("div", { style: { textAlign: "center", animation: "fadeUp 0.8s ease both", maxWidth: "90%" } },
+            React.createElement("p", { style: { fontFamily: "'Space Mono', monospace", fontSize: 11, letterSpacing: 4, color: ACCENT, marginBottom: 16 } }, "AGROTECH INNOVATIONS"),
+            React.createElement("h1", { style: { fontSize: "clamp(40px, 9vw, 80px)", fontWeight: 700, letterSpacing: -2, lineHeight: 1.1, marginBottom: 24, color: fg } },
+              "Выращивай", React.createElement("br"), React.createElement("span", { style: { color: ACCENT } }, "будущее"), " сегодня"
+            ),
+            React.createElement("p", { style: { fontSize: 18, color: muted, maxWidth: 520, margin: "0 auto 40px", lineHeight: 1.6 } }, "Элитные семена, биопрепараты и удобрения. Агро-инфо без шума."),
+            React.createElement("div", { style: { display: "flex", gap: 16, justifyContent: "center", flexWrap: "wrap" } },
+              React.createElement("button", { onClick: () => navigate("catalog"), style: { padding: "14px 32px", background: ACCENT, color: "#000", border: "none", fontSize: 13, fontWeight: 700, borderRadius: 60, cursor: "pointer" } }, "КАТАЛОГ →"),
+              React.createElement("button", { onClick: () => navigate("catalog"), style: { padding: "14px 32px", background: "transparent", color: fg, border: `1px solid ${border}`, fontSize: 13, borderRadius: 60, cursor: "pointer" } }, "О КОМПАНИИ")
+            )
+          ),
+          React.createElement("div", { style: { position: "absolute", bottom: 30, left: "50%", transform: "translateX(-50%)", opacity: 0.4, textAlign: "center" } },
+            React.createElement("span", { style: { fontSize: 9, letterSpacing: 3, fontFamily: "'Space Mono', monospace" } }, "SCROLL")
+          )
+        ),
+        React.createElement("section", { style: { padding: "60px 24px", borderTop: `1px solid ${border}`, display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 32, textAlign: "center" } },
+          [["150+", "Сортов"], ["98%", "Всхожесть"], ["24/7", "Консультации"]].map(([n, t]) => React.createElement("div", { key: t }, React.createElement("div", { style: { fontSize: 42, fontWeight: 600, color: ACCENT } }, n), React.createElement("div", { style: { fontSize: 12, color: muted, letterSpacing: 1 } }, t)))
+        ),
+        React.createElement("section", { style: { padding: "60px 24px" } },
+          React.createElement("div", { style: { display: "flex", justifyContent: "space-between", alignItems: "flex-end", flexWrap: "wrap", marginBottom: 40, gap: 16 } },
+            React.createElement("div", null,
+              React.createElement("p", { style: { fontFamily: "'Space Mono', monospace", fontSize: 10, letterSpacing: 3, color: ACCENT } }, "ПОПУЛЯРНОЕ"),
+              React.createElement("h2", { style: { fontSize: "clamp(28px, 5vw, 42px)", fontWeight: 500, color: fg } }, "Лидеры продаж")
+            ),
+            React.createElement("span", { onClick: () => navigate("catalog"), style: { fontSize: 12, cursor: "pointer", color: muted, borderBottom: `1px solid ${muted}` } }, "Все товары →")
+          ),
+          React.createElement("div", { style: { display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: 24 } },
+            products.slice(0, 3).map(p => React.createElement(ProductCard, { key: p.id, product: p, dark, fg, border, navigate, addToCart }))
+          )
+        ),
+        React.createElement("section", { style: { padding: "80px 24px", textAlign: "center", background: dark ? "#0f172a" : "#f1f5f9" } },
+          React.createElement("h2", { style: { fontSize: "clamp(24px, 4vw, 36px)", fontWeight: 500, maxWidth: 700, margin: "0 auto", lineHeight: 1.3, color: fg } },
+            "Агрономия, проверенная временем. Доставляем семена по всей России."
+          ),
+          React.createElement("button", { onClick: () => navigate("catalog"), style: { marginTop: 40, padding: "12px 32px", background: ACCENT, border: "none", borderRadius: 40, fontWeight: 600, cursor: "pointer" } }, "В каталог")
+        )
+      );
+    }
+
+    // ─── КАТАЛОГ ────────────────────────────────────────────────
+    function CatalogPage({ dark, fg, border, products, navigate, addToCart, filter, setFilter, search, setSearch }) {
+      const categories = ["Все", "Семена", "Удобрения", "Биопрепараты", "Грунты"];
+      const muted = dark ? "#9ca3af" : "#4b5563";
+      return React.createElement("div", { style: { padding: "100px 24px 80px", minHeight: "100vh" } },
+        React.createElement("div", { style: { marginBottom: 48, animation: "fadeUp 0.6s ease both" } },
+          React.createElement("p", { style: { fontFamily: "'Space Mono', monospace", fontSize: 10, letterSpacing: 4, color: ACCENT } }, "АГРО-КАТАЛОГ"),
+          React.createElement("h1", { style: { fontSize: "clamp(36px, 7vw, 56px)", fontWeight: 600, marginBottom: 24, color: fg } }, "Семена и средства"),
+          React.createElement("input", { type: "text", placeholder: "🔍 Поиск по названию или тегу...", value: search, onChange: e => setSearch(e.target.value), style: { width: "100%", maxWidth: 380, padding: "12px 20px", background: "transparent", border: `1px solid ${border}`, color: fg, borderRadius: 60, marginBottom: 24 } }),
+          React.createElement("div", { style: { display: "flex", gap: 10, flexWrap: "wrap", marginBottom: 32 } },
+            categories.map(c => React.createElement("button", { key: c, onClick: () => setFilter(c), style: { padding: "6px 18px", borderRadius: 60, background: filter === c ? ACCENT : "transparent", border: `1px solid ${filter === c ? ACCENT : border}`, color: filter === c ? "#000" : fg, fontSize: 12, cursor: "pointer" } }, c))
+          )
+        ),
+        products.length === 0 ? React.createElement("div", { style: { textAlign: "center", padding: "80px" } }, "🌾 Ничего не найдено") :
+          React.createElement("div", { style: { display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: 24 } }, products.map(p => React.createElement(ProductCard, { key: p.id, product: p, dark, fg, border, navigate, addToCart })))
+      );
+    }
+
+    // ─── СТРАНИЦА ТОВАРА ────────────────────────────────────────
+    function ProductPage({ product, dark, fg, border, navigate, addToCart }) {
+      const [qty, setQty] = React.useState(1);
+      const muted = dark ? "#9ca3af" : "#4b5563";
+      const barcode = React.useMemo(() => generateBarcode(product.id), [product.id]);
+      return React.createElement("div", { style: { paddingTop: 70, minHeight: "100vh" } },
+        React.createElement("div", { style: { padding: "20px 24px" }, onClick: () => navigate("catalog") }, React.createElement("span", { style: { cursor: "pointer", color: ACCENT, fontFamily: "'Space Mono', monospace", fontSize: 12 } }, "← НАЗАД В КАТАЛОГ")),
+        React.createElement("div", { style: { display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: 40, padding: "0 24px 80px" } },
+          React.createElement("div", { style: { display: "flex", justifyContent: "center" } }, React.createElement(SeedOrb, { size: 240, glow: true })),
+          React.createElement("div", null,
+            React.createElement("div", { style: { fontFamily: "'Space Mono', monospace", fontSize: 12, color: ACCENT } }, product.category),
+            React.createElement("h1", { style: { fontSize: "clamp(32px, 6vw, 48px)", margin: "12px 0 8px", color: fg } }, product.name),
+            React.createElement("p", { style: { fontSize: 15, color: muted, lineHeight: 1.6, marginBottom: 28 } }, product.description),
+            React.createElement("div", { style: { display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 28 } },
+              Object.entries(product.specs).slice(0,4).map(([k,v]) => React.createElement("div", { key: k, style: { borderBottom: `1px solid ${border}`, padding: "8px 0" } }, React.createElement("div", { style: { fontSize: 10, color: muted } }, k.toUpperCase()), React.createElement("div", { style: { fontWeight: 500, color: fg } }, v)))
+            ),
+            React.createElement("div", { style: { display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 28 } }, product.tags.map(t => React.createElement("span", { key: t, style: { padding: "4px 12px", background: dark ? "#1e293b" : "#e2e8f0", borderRadius: 40, fontSize: 11 } }, t))),
+            React.createElement("div", { style: { display: "flex", alignItems: "center", gap: 24, marginBottom: 28, flexWrap: "wrap" } },
+              React.createElement("span", { style: { fontSize: 36, fontWeight: 600, color: ACCENT } }, `${product.price * qty} ₽`),
+              React.createElement("div", { style: { display: "flex", border: `1px solid ${border}`, borderRadius: 60 } },
+                React.createElement("button", { onClick: () => setQty(Math.max(1, qty-1)), style: { padding: "8px 18px", background: "transparent", border: "none", fontSize: 20, cursor: "pointer", color: fg } }, "−"),
+                React.createElement("span", { style: { padding: "8px 16px", minWidth: 50, textAlign: "center" } }, qty),
+                React.createElement("button", { onClick: () => setQty(qty+1), style: { padding: "8px 18px", background: "transparent", border: "none", fontSize: 20, cursor: "pointer", color: fg } }, "+")
+              )
+            ),
+            React.createElement("button", { onClick: () => { for(let i=0;i<qty;i++) addToCart(product); }, style: { width: "100%", padding: 16, background: ACCENT, border: "none", borderRadius: 60, fontWeight: 700, fontSize: 14, cursor: "pointer" } }, `Добавить в корзину — ${product.price * qty} ₽`)
+          )
+        ),
+        React.createElement("div", { style: { margin: "0 24px 60px", padding: 32, border: `1px solid ${border}`, borderRadius: 32, background: dark ? "#0f172a" : "#f8fafc" } },
+          React.createElement("h3", { style: { fontFamily: "'Space Mono', monospace", color: ACCENT, marginBottom: 20 } }, "ГЕНЕТИЧЕСКИЙ ПАСПОРТ"),
+          React.createElement("div", { style: { display: "grid", gridTemplateColumns: "repeat(21, minmax(4px, 1fr))", gap: 1, maxWidth: 300, margin: "0 auto 20px" } }, barcode.flat().map((cell,i) => React.createElement("div", { key: i, style: { aspectRatio: "1/1", background: cell ? "#000" : "#fff" } }))),
+          React.createElement("div", { style: { textAlign: "center", fontFamily: "'Space Mono', monospace", fontSize: 14, letterSpacing: 1 } }, product.id)
+        )
+      );
+    }
+
+    // ─── КОРЗИНА ────────────────────────────────────────────────
+    function CartPage({ cart, dark, fg, border, navigate, removeFromCart, updateQty, cartTotal }) {
+      const muted = dark ? "#9ca3af" : "#4b5563";
+      if (cart.length === 0) return React.createElement("div", { style: { padding: "120px 24px", textAlign: "center" } },
+        React.createElement("div", { style: { fontSize: 64, marginBottom: 20, opacity: 0.3 } }, "🛒"),
+        React.createElement("h2", { style: { color: fg } }, "Корзина пуста"), React.createElement("button", { onClick: () => navigate("catalog"), style: { marginTop: 24, background: ACCENT, border: "none", padding: "12px 28px", borderRadius: 40, cursor: "pointer" } }, "Перейти в каталог")
+      );
+      return React.createElement("div", { style: { padding: "100px 24px 80px", minHeight: "100vh" } },
+        React.createElement("h1", { style: { fontSize: "clamp(32px, 6vw, 48px)", marginBottom: 40, color: fg } }, "Ваша корзина"),
+        React.createElement("div", { style: { display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 16, marginBottom: 40 } },
+          cart.map(item => React.createElement("div", { key: item.id, style: { display: "flex", justifyContent: "space-between", alignItems: "center", padding: 16, border: `1px solid ${border}`, borderRadius: 24, background: dark ? "#111827" : "#fff", flexWrap: "wrap", gap: 12 } },
+            React.createElement("div", null, React.createElement("h3", { style: { fontSize: 18 } }, item.name), React.createElement("div", { style: { fontSize: 12, color: muted } }, item.category)),
+            React.createElement("div", { style: { display: "flex", alignItems: "center", gap: 12 } },
+              React.createElement("button", { onClick: () => updateQty(item.id, -1), style: { background: "transparent", border: `1px solid ${border}`, width: 32, borderRadius: 40, cursor: "pointer" } }, "−"),
+              React.createElement("span", null, item.qty),
+              React.createElement("button", { onClick: () => updateQty(item.id, 1), style: { background: "transparent", border: `1px solid ${border}`, width: 32, borderRadius: 40, cursor: "pointer" } }, "+")
+            ),
+            React.createElement("span", { style: { fontWeight: 600, color: ACCENT } }, `${item.price * item.qty} ₽`),
+            React.createElement("button", { onClick: () => removeFromCart(item.id), style: { background: "none", border: "none", fontSize: 18, cursor: "pointer", opacity: 0.6 } }, "✕")
+          ))
+        ),
+        React.createElement("div", { style: { textAlign: "right", borderTop: `1px solid ${border}`, paddingTop: 24 } },
+          React.createElement("h3", { style: { fontSize: 28, color: fg } }, `Итого: ${cartTotal} ₽`),
+          React.createElement("button", { onClick: () => navigate("checkout"), style: { marginTop: 20, padding: "12px 32px", background: ACCENT, border: "none", borderRadius: 60, fontWeight: 600, cursor: "pointer" } }, "Оформить заказ")
+        )
+      );
+    }
+
+    // ─── ОФОРМЛЕНИЕ ──────────────────────────────────────────────
+    function CheckoutPage({ dark, fg, border, navigate, cartTotal }) {
+      const [form, setForm] = React.useState({ name: "", phone: "", address: "" });
+      const [done, setDone] = React.useState(false);
+      if (done) return React.createElement("div", { style: { height: "100vh", display: "flex", justifyContent: "center", alignItems: "center", flexDirection: "column", textAlign: "center", padding: 24 } },
+        React.createElement("div", { style: { fontSize: 64 } }, "✅"),
+        React.createElement("h2", { style: { color: fg, marginTop: 16 } }, "Заказ принят!"),
+        React.createElement("p", { style: { color: "#9ca3af" } }, "Менеджер свяжется с вами в ближайшее время."),
+        React.createElement("button", { onClick: () => navigate("home"), style: { marginTop: 32, background: ACCENT, padding: "12px 32px", borderRadius: 60, border: "none", cursor: "pointer" } }, "На главную")
+      );
+      return React.createElement("div", { style: { padding: "100px 24px 80px", maxWidth: 600, margin: "0 auto" } },
+        React.createElement("h1", { style: { fontSize: "clamp(32px, 6vw, 44px)", marginBottom: 32, color: fg } }, "Оформление"),
+        React.createElement("div", { style: { display: "flex", flexDirection: "column", gap: 20 } },
+          ["name", "phone", "address"].map(field => React.createElement("input", { key: field, type: "text", placeholder: field === "name" ? "Ваше имя" : field === "phone" ? "Телефон" : "Адрес доставки", value: form[field], onChange: e => setForm({...form, [field]: e.target.value}), style: { padding: "14px 20px", background: "transparent", border: `1px solid ${border}`, borderRadius: 60, color: fg, fontSize: 14 } })),
+          React.createElement("div", { style: { padding: 20, borderRadius: 24, border: `1px solid ${border}`, textAlign: "center" } }, React.createElement("span", { style: { fontSize: 20, fontWeight: 600, color: ACCENT } }, `Сумма: ${cartTotal} ₽`)),
+          React.createElement("button", { onClick: () => { if(form.name && form.phone) setDone(true); }, style: { padding: "14px", background: ACCENT, border: "none", borderRadius: 60, fontWeight: 700, cursor: "pointer" } }, "Подтвердить заказ")
+        )
+      );
+    }
+
+    // ─── ROOT ────────────────────────────────────────────────────
+    function AgroneewApp() {
+      const [page, setPage] = React.useState("home");
+      const [selected, setSelected] = React.useState(null);
+      const [cart, setCart] = React.useState([]);
+      const [filter, setFilter] = React.useState("Все");
+      const [search, setSearch] = React.useState("");
+      const [dark, setDark] = React.useState(true);
+      const [toast, setToast] = React.useState("");
+
+      const showToast = msg => { setToast(msg); setTimeout(() => setToast(""), 2500); };
+      const addToCart = product => {
+        setCart(prev => { const ex = prev.find(i => i.id === product.id); return ex ? prev.map(i => i.id === product.id ? {...i, qty: i.qty+1} : i) : [...prev, {...product, qty: 1}]; });
+        showToast(`${product.name} добавлен`);
+      };
+      const removeFromCart = id => setCart(prev => prev.filter(i => i.id !== id));
+      const updateQty = (id, d) => setCart(prev => prev.map(i => i.id === id ? {...i, qty: Math.max(1, i.qty + d)} : i));
+      const cartTotal = cart.reduce((s,i) => s + i.price * i.qty, 0);
+      const cartCount = cart.reduce((s,i) => s + i.qty, 0);
+      const navigate = (p, product = null) => { setSelected(product); setPage(p); window.scrollTo(0,0); };
+
+      const filtered = React.useMemo(() => PRODUCTS.filter(p => (filter === "Все" || p.category === filter) && (p.name.toLowerCase().includes(search.toLowerCase()) || p.tags.some(t => t.toLowerCase().includes(search.toLowerCase())))), [filter, search]);
+
+      const bg = dark ? BG_DARK : BG_LIGHT;
+      const fg = dark ? FG_DARK : FG_LIGHT;
+      const border = dark ? "#1e293b" : "#cbd5e1";
+
+      const ctx = { dark, fg, bg, border, navigate, addToCart, removeFromCart, updateQty, cartTotal, cart, filter, setFilter, search, setSearch, products: filtered };
+
+      return React.createElement("div", { style: { background: bg, color: fg, fontFamily: "'Inter', sans-serif", minHeight: "100vh", transition: "all 0.3s" } },
+        React.createElement("nav", { style: { position: "fixed", top: 0, left: 0, right: 0, zIndex: 100, display: "flex", justifyContent: "space-between", alignItems: "center", padding: "0 20px", height: 60, background: dark ? "rgba(10,12,18,0.9)" : "rgba(248,250,252,0.9)", backdropFilter: "blur(12px)", borderBottom: `1px solid ${border}` } },
+          React.createElement("span", { onClick: () => navigate("home"), style: { fontFamily: "'Space Mono', monospace", fontSize: 16, fontWeight: 700, cursor: "pointer" } }, "AGRO", React.createElement("span", { style: { color: ACCENT } }, "NEW")),
+          React.createElement("div", { style: { display: "flex", gap: 16, alignItems: "center" } },
+            React.createElement("span", { onClick: () => navigate("catalog"), style: { fontSize: 12, cursor: "pointer" } }, "КАТАЛОГ"),
+            React.createElement("span", { onClick: () => navigate("cart"), style: { position: "relative", cursor: "pointer" } }, "🛒", cartCount > 0 && React.createElement("span", { style: { position: "absolute", top: -8, right: -12, background: ACCENT, color: "#000", borderRadius: "50%", width: 16, height: 16, fontSize: 10, display: "flex", alignItems: "center", justifyContent: "center" } }, cartCount)),
+            React.createElement("button", { onClick: () => setDark(!dark), style: { background: "transparent", border: `1px solid ${border}`, borderRadius: 60, padding: "4px 12px", fontSize: 10, cursor: "pointer", color: fg } }, dark ? "🌙" : "☀️")
+          )
+        ),
+        toast && React.createElement("div", { style: { position: "fixed", bottom: 20, right: 20, background: ACCENT, color: "#000", padding: "10px 20px", borderRadius: 60, fontSize: 12, fontWeight: 600, zIndex: 200, animation: "toast-in 0.2s ease" } }, toast),
+        page === "home" && React.createElement(HomePage, { ...ctx, products: PRODUCTS }),
+        page === "catalog" && React.createElement(CatalogPage, { ...ctx, products: filtered, filter, setFilter, search, setSearch }),
+        page === "product" && selected && React.createElement(ProductPage, { ...ctx, product: selected }),
+        page === "cart" && React.createElement(CartPage, { ...ctx, cart, removeFromCart, updateQty, cartTotal }),
+        page === "checkout" && React.createElement(CheckoutPage, { ...ctx, cartTotal }),
+        React.createElement("footer", { style: { padding: "32px 20px", textAlign: "center", borderTop: `1px solid ${border}`, fontSize: 11, color: dark ? "#6b7280" : "#4b5563" } }, "Agroneew © 2026 — Агро-информация нового поколения")
+      );
+    }
+
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(React.createElement(AgroneewApp));
+  </script>
+</body>
+</html>
