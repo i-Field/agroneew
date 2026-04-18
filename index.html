@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>Agroneew — Агро-маркет нового поколения</title>
+  <title>Agroneew — Генетика нового покоління</title>
   <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
   <!-- React + ReactDOM + Babel Standalone -->
@@ -39,107 +39,153 @@
     const BG_LIGHT = "#f8fafc";
     const FG_DARK = "#eef2ff";
     const FG_LIGHT = "#0f172a";
+    const TELEGRAM_LINK = "https://t.me/agroneew_bot";
 
     // Курсы валют (относительно RUB)
-    const EXCHANGE_RATES = { RUB: 1, USD: 0.011, EUR: 0.0102 }; // 1 RUB ≈ 0.011 USD, 0.0102 EUR (примерные)
-    const CURRENCY_SYMBOLS = { RUB: "₽", USD: "$", EUR: "€" };
+    const EXCHANGE_RATES = { RUB: 1, USD: 0.011, EUR: 0.0102, UAH: 0.42 };
+    const CURRENCY_SYMBOLS = { RUB: "₽", USD: "$", EUR: "€", UAH: "₴" };
 
-    // Данные продуктов с поддержкой двух языков
+    // Данные продуктов (семена каннабиса) — без изменений
     const PRODUCTS = [
-      { id: "AG-101", category: "Семена", categoryEn: "Seeds", price: 2450,
-        name: "Пшеница Злата", nameEn: "Wheat Zlata",
-        tagline: "Высокоурожайная озимая", taglineEn: "High-yield winter wheat",
-        description: "Сорт интенсивного типа с потенциалом 120 ц/га. Устойчив к засухе и болезням. Рекомендован для центральных регионов.",
-        descriptionEn: "Intensive variety with potential 120 dt/ha. Resistant to drought and diseases. Recommended for central regions.",
-        tags: ["Пшеница", "Озимая", "Элит"], tagsEn: ["Wheat", "Winter", "Elite"],
-        specs: { yield: 118, protein: 14.2, resistance: 8, origin: "НИИСХ", originEn: "Research Institute" } },
-      { id: "AG-102", name: "Кукуруза Доминатор", nameEn: "Corn Dominator", category: "Семена", categoryEn: "Seeds", price: 3800,
-        tagline: "Силос + зерно", taglineEn: "Silage + grain",
-        description: "Гибрид среднеранний. Отличная листостебельная масса и высокое содержание крахмала. Устойчив к фузариозу.",
-        descriptionEn: "Medium-early hybrid. Excellent leaf-stem mass and high starch content. Resistant to fusarium.",
-        tags: ["Кукуруза", "Силос", "Гибрид"], tagsEn: ["Corn", "Silage", "Hybrid"],
-        specs: { yield: 105, protein: 9.5, resistance: 9, origin: "США/Европа", originEn: "USA/Europe" } },
-      { id: "AG-103", name: "Подсолнечник Ясон", nameEn: "Sunflower Jason", category: "Семена", categoryEn: "Seeds", price: 4900,
-        tagline: "Масличный линолевый", taglineEn: "Oleic linoleic",
-        description: "Высокомасличный гибрид с содержанием масла до 52%. Иммунен к заразихе. Идеален для южных зон.",
-        descriptionEn: "High-oil hybrid with up to 52% oil. Immune to broomrape. Ideal for southern zones.",
-        tags: ["Подсолнечник", "Масличный", "Линолевый"], tagsEn: ["Sunflower", "Oily", "Linoleic"],
-        specs: { yield: 42, oil: 52, resistance: 9, origin: "Франция", originEn: "France" } },
-      { id: "AG-104", name: "Картофель Колобок", nameEn: "Potato Kolobok", category: "Семена", categoryEn: "Seeds", price: 1850,
-        tagline: "Столовый, урожайный", taglineEn: "Table, productive",
-        description: "Сорт среднего срока созревания. Клубни округлые, мякоть жёлтая. Устойчив к фитофторозу и парше.",
-        descriptionEn: "Mid-season variety. Rounded tubers, yellow flesh. Resistant to late blight and scab.",
-        tags: ["Картофель", "Столовый", "Лежкий"], tagsEn: ["Potato", "Table", "Storable"],
-        specs: { yield: 450, starch: 16, resistance: 8, origin: "Россия", originEn: "Russia" } },
-      { id: "AG-105", name: "Соя Авангард", nameEn: "Soybean Avangard", category: "Семена", categoryEn: "Seeds", price: 6200,
-        tagline: "Высокобелковая", taglineEn: "High-protein",
-        description: "Раннеспелый сорт с содержанием белка до 42%. Подходит для пищевых и кормовых целей. Устойчив к нематоде.",
-        descriptionEn: "Early maturing variety with up to 42% protein. Suitable for food and feed. Resistant to nematodes.",
-        tags: ["Соя", "Белок", "Нематодоустойчивый"], tagsEn: ["Soybean", "Protein", "Nematode-resistant"],
-        specs: { yield: 38, protein: 42, resistance: 8, origin: "Канада", originEn: "Canada" } },
-      { id: "AG-106", name: "Удобрение Агромикс", nameEn: "Fertilizer Agromix", category: "Удобрения", categoryEn: "Fertilizers", price: 1250,
-        tagline: "NPK 15-15-15 + микро", taglineEn: "NPK 15-15-15 + micro",
-        description: "Комплексное гранулированное удобрение с медленным высвобождением. Повышает урожайность на 30%. Без хлора.",
-        descriptionEn: "Complex granular slow-release fertilizer. Increases yield by 30%. Chlorine-free.",
-        tags: ["NPK", "Микроэлементы", "Пролонгированное"], tagsEn: ["NPK", "Micronutrients", "Slow-release"],
-        specs: { n: 15, p: 15, k: 15, duration: 90 } },
-      { id: "AG-107", name: "Биостимулятор Экогрин", nameEn: "Biostimulant Ecogreen", category: "Биопрепараты", categoryEn: "Biopreparations", price: 890,
-        tagline: "Натуральный иммунитет", taglineEn: "Natural immunity",
-        description: "На основе гуминовых кислот. Стимулирует корнеобразование, повышает стрессоустойчивость. Для всех культур.",
-        descriptionEn: "Based on humic acids. Stimulates rooting, increases stress resistance. For all crops.",
-        tags: ["Гумат", "Органика", "Стресс"], tagsEn: ["Humate", "Organic", "Stress"],
-        specs: { humic: 18, amino: 5, application: "лист/корень", applicationEn: "leaf/root" } },
-      { id: "AG-108", name: "Почвогрунт Универсал", nameEn: "Universal Soil", category: "Грунты", categoryEn: "Soils", price: 450,
-        tagline: "60 л, обогащённый", taglineEn: "60 l, enriched",
-        description: "Готовый грунт для рассады и овощей. PH нейтральный. Добавлен вермикулит и биогумус.",
-        descriptionEn: "Ready-made soil for seedlings and vegetables. Neutral pH. Added vermiculite and biohumus.",
-        tags: ["Грунт", "Рассада", "Биогумус"], tagsEn: ["Soil", "Seedlings", "Biohumus"],
-        specs: { volume: 60, ph: 6.8, organic: 45 } }
+      { id: "S-001", name: "Super Skunk", nameEn: "Super Skunk", nameUa: "Супер Сканк", category: "Фемінізовані", categoryEn: "Feminized", categoryUa: "Фемінізовані", price: 3200,
+        tagline: "Класичний потужний сорт", taglineEn: "Classic potent strain", taglineUa: "Класичний потужний сорт",
+        description: "Super Skunk — легендарний гібрид з високим вмістом THC. Коротке цвітіння, стійкість до плісняви, потужний аромат. Ідеальний для новачків і професіоналів.",
+        descriptionEn: "Super Skunk — legendary hybrid with high THC content. Short flowering, mold resistance, powerful aroma. Ideal for beginners and pros.",
+        descriptionUa: "Super Skunk — легендарний гібрид з високим вмістом THC. Коротке цвітіння, стійкість до плісняви, потужний аромат. Ідеальний для новачків і професіоналів.",
+        tags: ["Skunk", "Потужний", "Фемінізовані"], tagsEn: ["Skunk", "Potent", "Feminized"], tagsUa: ["Skunk", "Потужний", "Фемінізовані"],
+        specs: { thc: 22, flowering: "8-9 тиж", yield: 500, type: "Індика-домінант", typeEn: "Indica-dominant", typeUa: "Індика-домінант" } },
+      { id: "S-002", name: "Khorol Orange", nameEn: "Khorol Orange", nameUa: "Хорол Оранж", category: "Фемінізовані", categoryEn: "Feminized", categoryUa: "Фемінізовані", price: 3500,
+        tagline: "Цитрусова насолода", taglineEn: "Citrus explosion", taglineUa: "Цитрусова насолода",
+        description: "Унікальний сорт з апельсиновим ароматом та високим урожаєм. Сатива-домінант, бадьорий ефект, ідеальний для денного використання.",
+        descriptionEn: "Unique strain with orange aroma and high yield. Sativa-dominant, uplifting effect, perfect for daytime.",
+        descriptionUa: "Унікальний сорт з апельсиновим ароматом та високим урожаєм. Сатива-домінант, бадьорий ефект, ідеальний для денного використання.",
+        tags: ["Цитрус", "Сатива", "Ароматний"], tagsEn: ["Citrus", "Sativa", "Aromatic"], tagsUa: ["Цитрус", "Сатива", "Ароматний"],
+        specs: { thc: 20, flowering: "9-10 тиж", yield: 550, type: "Сатива-домінант", typeEn: "Sativa-dominant", typeUa: "Сатива-домінант" } },
+      { id: "S-003", name: "AMG", nameEn: "AMG", nameUa: "AMG", category: "Автоцвітні", categoryEn: "Autoflowering", categoryUa: "Автоцвітні", price: 2900,
+        tagline: "Швидкий старт", taglineEn: "Fast start", taglineUa: "Швидкий старт",
+        description: "Автоцвітний гібрид з високим вмістом THC. Від насінини до врожаю 70 днів. Компактний розмір, ідеальний для indoor.",
+        descriptionEn: "Autoflowering hybrid with high THC. Seed to harvest in 70 days. Compact size, perfect for indoor.",
+        descriptionUa: "Автоцвітний гібрид з високим вмістом THC. Від насінини до врожаю 70 днів. Компактний розмір, ідеальний для indoor.",
+        tags: ["Автоцвіт", "Швидкий", "Компактний"], tagsEn: ["Autoflower", "Fast", "Compact"], tagsUa: ["Автоцвіт", "Швидкий", "Компактний"],
+        specs: { thc: 18, flowering: "70 днів", yield: 400, type: "Рудраліс-гібрид", typeEn: "Ruderalis hybrid", typeUa: "Рудраліс-гібрид" } },
+      { id: "S-004", name: "Pure Sativa", nameEn: "Pure Sativa", nameUa: "Чиста Сатива", category: "Регулярні", categoryEn: "Regular", categoryUa: "Регулярні", price: 2800,
+        tagline: "Енергія та творчість", taglineEn: "Energy & creativity", taglineUa: "Енергія та творчість",
+        description: "Чиста сатива з довгим, але щедрим цвітінням. Високий потолок, яскравий ефект. Для досвідчених гроверів.",
+        descriptionEn: "Pure sativa with long but generous flowering. High ceiling, bright effect. For experienced growers.",
+        descriptionUa: "Чиста сатива з довгим, але щедрим цвітінням. Високий потолок, яскравий ефект. Для досвідчених гроверів.",
+        tags: ["Сатива", "Енергія", "Довге цвітіння"], tagsEn: ["Sativa", "Energy", "Long flowering"], tagsUa: ["Сатива", "Енергія", "Довге цвітіння"],
+        specs: { thc: 21, flowering: "11-12 тиж", yield: 450, type: "Сатива", typeEn: "Sativa", typeUa: "Сатива" } },
+      { id: "S-005", name: "Pure Indica", nameEn: "Pure Indica", nameUa: "Чиста Індика", category: "Регулярні", categoryEn: "Regular", categoryUa: "Регулярні", price: 2700,
+        tagline: "Глибоке розслаблення", taglineEn: "Deep relaxation", taglineUa: "Глибоке розслаблення",
+        description: "Класична індика з важким кам'яним ефектом. Чудово підходить для вечора та зняття стресу.",
+        descriptionEn: "Classic indica with heavy stone effect. Great for evening and stress relief.",
+        descriptionUa: "Класична індика з важким кам'яним ефектом. Чудово підходить для вечора та зняття стресу.",
+        tags: ["Індика", "Релакс", "Вечірній"], tagsEn: ["Indica", "Relax", "Evening"], tagsUa: ["Індика", "Релакс", "Вечірній"],
+        specs: { thc: 19, flowering: "8-9 тиж", yield: 480, type: "Індика", typeEn: "Indica", typeUa: "Індика" } },
+      { id: "S-006", name: "Auto AK", nameEn: "Auto AK", nameUa: "Авто АК", category: "Автоцвітні", categoryEn: "Autoflowering", categoryUa: "Автоцвітні", price: 3100,
+        tagline: "Автоматичний бестселер", taglineEn: "Auto bestseller", taglineUa: "Автоматичний бестселер",
+        description: "Автоцвітна версія знаменитого AK-47. Швидкий ріст, висока стійкість, смолисті шишки.",
+        descriptionEn: "Autoflowering version of famous AK-47. Fast growth, high resistance, resinous buds.",
+        descriptionUa: "Автоцвітна версія знаменитого AK-47. Швидкий ріст, висока стійкість, смолисті шишки.",
+        tags: ["Автоцвіт", "AK", "Смолистий"], tagsEn: ["Autoflower", "AK", "Resinous"], tagsUa: ["Автоцвіт", "AK", "Смолистий"],
+        specs: { thc: 20, flowering: "65 днів", yield: 450, type: "Індика-домінант", typeEn: "Indica-dominant", typeUa: "Індика-домінант" } },
+      { id: "S-007", name: "Regular Mix", nameEn: "Regular Mix", nameUa: "Регулярний Мікс", category: "Регулярні", categoryEn: "Regular", categoryUa: "Регулярні", price: 2200,
+        tagline: "Класика для селекції", taglineEn: "Classic for breeding", taglineUa: "Класика для селекції",
+        description: "Набір регулярних насінин (50/50 чоловічі/жіночі). Чудово підходить для створення своїх гібридів.",
+        descriptionEn: "Regular seed mix (50/50 male/female). Great for creating your own hybrids.",
+        descriptionUa: "Набір регулярних насінин (50/50 чоловічі/жіночі). Чудово підходить для створення своїх гібридів.",
+        tags: ["Регулярні", "Селекція", "Мікс"], tagsEn: ["Regular", "Breeding", "Mix"], tagsUa: ["Регулярні", "Селекція", "Мікс"],
+        specs: { thc: 15, flowering: "8-10 тиж", yield: 400, type: "Гібрид", typeEn: "Hybrid", typeUa: "Гібрид" } },
+      { id: "S-008", name: "Amnesia Haze", nameEn: "Amnesia Haze", nameUa: "Амнезія Хейз", category: "Фемінізовані", categoryEn: "Feminized", categoryUa: "Фемінізовані", price: 4200,
+        tagline: "Легендарна сатива", taglineEn: "Legendary sativa", taglineUa: "Легендарна сатива",
+        description: "Amnesia Haze — багаторазовий переможець Cup. Потужний сативний ефект, складний пряно-цитрусовий аромат. Цвітіння до 11 тижнів, нагорода варта очікування.",
+        descriptionEn: "Amnesia Haze — multiple Cup winner. Powerful sativa effect, complex spicy-citrus aroma. Flowering up to 11 weeks, reward worth the wait.",
+        descriptionUa: "Amnesia Haze — багаторазовий переможець Cup. Потужний сативний ефект, складний пряно-цитрусовий аромат. Цвітіння до 11 тижнів, нагорода варта очікування.",
+        tags: ["Сатива", "Haze", "Преміум"], tagsEn: ["Sativa", "Haze", "Premium"], tagsUa: ["Сатива", "Haze", "Преміум"],
+        specs: { thc: 24, flowering: "10-11 тиж", yield: 500, type: "Сатива", typeEn: "Sativa", typeUa: "Сатива" } },
+      { id: "S-009", name: "Northern Lights", nameEn: "Northern Lights", nameUa: "Північне Сяйво", category: "Фемінізовані", categoryEn: "Feminized", categoryUa: "Фемінізовані", price: 3400,
+        tagline: "Класика індики", taglineEn: "Indica classic", taglineUa: "Класика індики",
+        description: "Northern Lights — еталонна індика. Коротке цвітіння, висока врожайність, смолистість, солодкий аромат. Ідеальний вибір для indoor.",
+        descriptionEn: "Northern Lights — benchmark indica. Short flowering, high yield, resinous, sweet aroma. Perfect for indoor.",
+        descriptionUa: "Northern Lights — еталонна індика. Коротке цвітіння, висока врожайність, смолистість, солодкий аромат. Ідеальний вибір для indoor.",
+        tags: ["Індика", "Класика", "Смолистий"], tagsEn: ["Indica", "Classic", "Resinous"], tagsUa: ["Індика", "Класика", "Смолистий"],
+        specs: { thc: 18, flowering: "7-8 тиж", yield: 550, type: "Індика", typeEn: "Indica", typeUa: "Індика" } },
+      { id: "S-010", name: "Critical Auto", nameEn: "Critical Auto", nameUa: "Крітікал Авто", category: "Автоцвітні", categoryEn: "Autoflowering", categoryUa: "Автоцвітні", price: 3000,
+        tagline: "Швидка та врожайна", taglineEn: "Fast and productive", taglineUa: "Швидка та врожайна",
+        description: "Автоцвітний Critical Mass. Від насінини до харвесту 70-75 днів. Висока врожайність для автоцвіту, солодкий смак.",
+        descriptionEn: "Autoflowering Critical Mass. Seed to harvest 70-75 days. High yield for auto, sweet taste.",
+        descriptionUa: "Автоцвітний Critical Mass. Від насінини до харвесту 70-75 днів. Висока врожайність для автоцвіту, солодкий смак.",
+        tags: ["Автоцвіт", "Врожайний", "Швидкий"], tagsEn: ["Autoflower", "High yield", "Fast"], tagsUa: ["Автоцвіт", "Врожайний", "Швидкий"],
+        specs: { thc: 17, flowering: "70 днів", yield: 500, type: "Індика-домінант", typeEn: "Indica-dominant", typeUa: "Індика-домінант" } }
     ];
 
-    // ─── ПЕРЕВОДЫ ИНТЕРФЕЙСА ───────────────────────────────────
+    // ─── ПЕРЕВОДЫ ИНТЕРФЕЙСА (RU, EN, UA) ──────────────────────
     const TRANSLATIONS = {
       ru: {
         navCatalog: "КАТАЛОГ", navCart: "🛒", themeDark: "🌙", themeLight: "☀️",
-        heroTag: "AGROTECH INNOVATIONS", heroTitle1: "Выращивай", heroTitleAccent: "будущее", heroTitle2: "сегодня",
-        heroDesc: "Элитные семена, биопрепараты и удобрения. Агро-инфо без шума.",
-        btnCatalog: "КАТАЛОГ →", btnAbout: "О КОМПАНИИ",
-        stats: [["150+", "Сортов"], ["98%", "Всхожесть"], ["24/7", "Консультации"]],
+        heroTag: "CANNABIS GENETICS", heroTitle1: "Открой", heroTitleAccent: "генетику", heroTitle2: "будущего",
+        heroDesc: "Элитные семена конопли. Феминизированные, автоцветущие, регулярные. Доставка по всему миру.",
+        btnCatalog: "КАТАЛОГ →", btnAbout: "О НАС",
+        stats: [["150+", "Сортов"], ["98%", "Всхожесть"], ["24/7", "Поддержка"]],
         featuredTitle: "ПОПУЛЯРНОЕ", featuredSubtitle: "Лидеры продаж", featuredLink: "Все товары →",
-        aboutSection: "Агрономия, проверенная временем. Доставляем семена по всему миру.",
+        aboutSection: "Генетика, проверенная временем. Доставляем семена по всему миру.",
         btnToCatalog: "В каталог",
-        catalogHeader: "АГРО-КАТАЛОГ", catalogTitle: "Семена и средства", searchPlaceholder: "🔍 Поиск по названию или тегу...",
-        categories: ["Все", "Семена", "Удобрения", "Биопрепараты", "Грунты"],
-        noResults: "🌾 Ничего не найдено",
+        catalogHeader: "КАТАЛОГ ГЕНЕТИКИ", catalogTitle: "Семена конопли", searchPlaceholder: "🔍 Поиск по названию или тегу...",
+        categories: ["Все", "Феминизированные", "Автоцветущие", "Регулярные"],
+        noResults: "🌿 Ничего не найдено",
         productBack: "← НАЗАД В КАТАЛОГ",
         geneticPassport: "ГЕНЕТИЧЕСКИЙ ПАСПОРТ",
         emptyCart: "Корзина пуста", goToCatalog: "Перейти в каталог",
         cartTitle: "Ваша корзина", total: "Итого:", checkout: "Оформить заказ",
-        checkoutTitle: "Оформление", namePlaceholder: "Ваше имя", phonePlaceholder: "Телефон", addressPlaceholder: "Адрес доставки",
-        orderConfirm: "Подтвердить заказ", orderSuccess: "Заказ принят!", orderDesc: "Менеджер свяжется с вами в ближайшее время.",
-        backHome: "На главную", footer: "Agroneew © 2026 — Агро-информация нового поколения",
-        currencyRUB: "RUB", currencyUSD: "USD", currencyEUR: "EUR", language: "Язык"
+        checkoutTitle: "Оформление", namePlaceholder: "Ваше имя", phonePlaceholder: "Telegram / Email", addressPlaceholder: "Адрес доставки",
+        orderConfirm: "Подтвердить заказ", orderSuccess: "Заказ принят!", orderDesc: "Мы свяжемся с вами в Telegram в ближайшее время.",
+        backHome: "На главную", footer: "Agroneew © 2026 — Генетика нового поколения",
+        currencyRUB: "RUB", currencyUSD: "USD", currencyEUR: "EUR", currencyUAH: "UAH", language: "Язык",
+        telegramButton: "📲 Написать в Telegram"
       },
       en: {
         navCatalog: "CATALOG", navCart: "🛒", themeDark: "🌙", themeLight: "☀️",
-        heroTag: "AGROTECH INNOVATIONS", heroTitle1: "Grow", heroTitleAccent: "the future", heroTitle2: "today",
-        heroDesc: "Elite seeds, biopreparations, fertilizers. Agro-info without noise.",
+        heroTag: "CANNABIS GENETICS", heroTitle1: "Unlock", heroTitleAccent: "the genetics", heroTitle2: "of tomorrow",
+        heroDesc: "Elite cannabis seeds. Feminized, autoflowering, regular. Worldwide shipping.",
         btnCatalog: "CATALOG →", btnAbout: "ABOUT US",
-        stats: [["150+", "Varieties"], ["98%", "Germination"], ["24/7", "Consulting"]],
+        stats: [["150+", "Strains"], ["98%", "Germination"], ["24/7", "Support"]],
         featuredTitle: "POPULAR", featuredSubtitle: "Best sellers", featuredLink: "All products →",
-        aboutSection: "Time-tested agronomy. We deliver seeds worldwide.",
+        aboutSection: "Time-tested genetics. We deliver seeds worldwide.",
         btnToCatalog: "Go to catalog",
-        catalogHeader: "AGRO-CATALOG", catalogTitle: "Seeds & inputs", searchPlaceholder: "🔍 Search by name or tag...",
-        categories: ["All", "Seeds", "Fertilizers", "Biopreparations", "Soils"],
-        noResults: "🌾 Nothing found",
+        catalogHeader: "GENETICS CATALOG", catalogTitle: "Cannabis seeds", searchPlaceholder: "🔍 Search by name or tag...",
+        categories: ["All", "Feminized", "Autoflowering", "Regular"],
+        noResults: "🌿 Nothing found",
         productBack: "← BACK TO CATALOG",
         geneticPassport: "GENETIC PASSPORT",
         emptyCart: "Cart is empty", goToCatalog: "Go to catalog",
         cartTitle: "Your cart", total: "Total:", checkout: "Checkout",
-        checkoutTitle: "Checkout", namePlaceholder: "Your name", phonePlaceholder: "Phone", addressPlaceholder: "Delivery address",
-        orderConfirm: "Confirm order", orderSuccess: "Order accepted!", orderDesc: "Manager will contact you shortly.",
-        backHome: "Home", footer: "Agroneew © 2026 — Next-gen agro information",
-        currencyRUB: "RUB", currencyUSD: "USD", currencyEUR: "EUR", language: "Language"
+        checkoutTitle: "Checkout", namePlaceholder: "Your name", phonePlaceholder: "Telegram / Email", addressPlaceholder: "Delivery address",
+        orderConfirm: "Confirm order", orderSuccess: "Order accepted!", orderDesc: "We will contact you via Telegram shortly.",
+        backHome: "Home", footer: "Agroneew © 2026 — Next-gen genetics",
+        currencyRUB: "RUB", currencyUSD: "USD", currencyEUR: "EUR", currencyUAH: "UAH", language: "Language",
+        telegramButton: "📲 Contact via Telegram"
+      },
+      ua: {
+        navCatalog: "КАТАЛОГ", navCart: "🛒", themeDark: "🌙", themeLight: "☀️",
+        heroTag: "CANNABIS GENETICS", heroTitle1: "Відкрий", heroTitleAccent: "генетику", heroTitle2: "майбутнього",
+        heroDesc: "Елітне насіння коноплі. Фемінізовані, автоцвітні, регулярні. Доставка по всьому світу.",
+        btnCatalog: "КАТАЛОГ →", btnAbout: "ПРО НАС",
+        stats: [["150+", "Сортів"], ["98%", "Схожість"], ["24/7", "Підтримка"]],
+        featuredTitle: "ПОПУЛЯРНЕ", featuredSubtitle: "Лідери продажів", featuredLink: "Всі товари →",
+        aboutSection: "Генетика, перевірена часом. Доставляємо насіння по всьому світу.",
+        btnToCatalog: "До каталогу",
+        catalogHeader: "КАТАЛОГ ГЕНЕТИКИ", catalogTitle: "Насіння коноплі", searchPlaceholder: "🔍 Пошук за назвою або тегом...",
+        categories: ["Всі", "Фемінізовані", "Автоцвітні", "Регулярні"],
+        noResults: "🌿 Нічого не знайдено",
+        productBack: "← НАЗАД ДО КАТАЛОГУ",
+        geneticPassport: "ГЕНЕТИЧНИЙ ПАСПОРТ",
+        emptyCart: "Кошик порожній", goToCatalog: "Перейти до каталогу",
+        cartTitle: "Ваш кошик", total: "Разом:", checkout: "Оформити замовлення",
+        checkoutTitle: "Оформлення", namePlaceholder: "Ваше ім'я", phonePlaceholder: "Telegram / Email", addressPlaceholder: "Адреса доставки",
+        orderConfirm: "Підтвердити замовлення", orderSuccess: "Замовлення прийнято!", orderDesc: "Ми зв'яжемося з вами в Telegram найближчим часом.",
+        backHome: "На головну", footer: "Agroneew © 2026 — Генетика нового покоління",
+        currencyRUB: "RUB", currencyUSD: "USD", currencyEUR: "EUR", currencyUAH: "UAH", language: "Мова",
+        telegramButton: "📲 Написати в Telegram"
       }
     };
 
@@ -150,18 +196,16 @@
       return Array.from({ length: 21 }, (_, r) => Array.from({ length: 21 }, (_, c) => ((hash ^ (r * 13 + c * 31)) % 3 === 0) ? 1 : 0));
     }
 
-    // Конвертация цены в выбранную валюту
     function convertPrice(priceRub, currency) {
       return Math.round(priceRub * EXCHANGE_RATES[currency]);
     }
 
-    // Форматирование цены с символом
     function formatPrice(priceRub, currency) {
       return `${convertPrice(priceRub, currency)} ${CURRENCY_SYMBOLS[currency]}`;
     }
 
-    // ─── АНИМИРОВАННЫЙ ЭЛЕМЕНТ (ЛИСТ / СЕМЯ) ─────────────────────
-    function SeedOrb({ size = 160, glow = true }) {
+    // ─── АНИМИРОВАННЫЙ ЭЛЕМЕНТ (ЛИСТ) ────────────────────────────
+    function LeafOrb({ size = 160, glow = true }) {
       return React.createElement("div", { style: { position: "relative", width: size, height: size } },
         React.createElement("div", { style: {
           width: size, height: size, borderRadius: "50%",
@@ -169,7 +213,7 @@
           boxShadow: glow ? `0 0 ${size * 0.4}px ${ACCENT}55, 0 ${size * 0.1}px ${size * 0.3}px rgba(0,0,0,0.5)` : "none",
           display: "flex", alignItems: "center", justifyContent: "center"
         } },
-          React.createElement("span", { style: { fontSize: size * 0.4, filter: "drop-shadow(0 4px 6px rgba(0,0,0,0.3))" } }, "🌱")
+          React.createElement("span", { style: { fontSize: size * 0.4, filter: "drop-shadow(0 4px 6px rgba(0,0,0,0.3))" } }, "🍃")
         ),
         glow && [0,1,2].map(i => React.createElement("div", { key: i, style: {
           position: "absolute", top: "50%", left: "50%",
@@ -181,13 +225,22 @@
       );
     }
 
-    // ─── КАРТОЧКА ТОВАРА ─────────────────────────────────────────
+    // ─── КАРТОЧКА ТОВАРА (адаптирована под три языка) ────────────
     function ProductCard({ product, dark, fg, border, navigate, addToCart, language, currency, style = {} }) {
       const [hover, setHover] = React.useState(false);
       const t = TRANSLATIONS[language];
-      const name = language === 'ru' ? product.name : product.nameEn;
-      const tagline = language === 'ru' ? product.tagline : product.taglineEn;
-      const category = language === 'ru' ? product.category : product.categoryEn;
+      let name, tagline, category, description, tags, type;
+      if (language === 'ru') {
+        name = product.name; tagline = product.tagline; category = product.category; description = product.description; tags = product.tags;
+        type = product.specs.type;
+      } else if (language === 'en') {
+        name = product.nameEn; tagline = product.taglineEn; category = product.categoryEn; description = product.descriptionEn; tags = product.tagsEn;
+        type = product.specs.typeEn;
+      } else {
+        name = product.nameUa || product.name; tagline = product.taglineUa || product.tagline; category = product.categoryUa || product.category;
+        description = product.descriptionUa || product.description; tags = product.tagsUa || product.tags;
+        type = product.specs.typeUa || product.specs.type;
+      }
       return React.createElement("div", {
         onMouseEnter: () => setHover(true), onMouseLeave: () => setHover(false),
         style: {
@@ -199,21 +252,21 @@
           borderRadius: 24, ...style
         }
       },
-        React.createElement("div", { style: { display: "inline-block", marginBottom: 20 } }, React.createElement(SeedOrb, { size: 70, glow: hover })),
+        React.createElement("div", { style: { display: "inline-block", marginBottom: 20 } }, React.createElement(LeafOrb, { size: 70, glow: hover })),
         React.createElement("div", { style: { fontFamily: "'Space Mono', monospace", fontSize: 10, letterSpacing: 2, color: ACCENT, marginBottom: 8 } }, category),
         React.createElement("h3", { onClick: () => navigate("product", product), style: { fontSize: 22, fontWeight: 600, marginBottom: 8, letterSpacing: -0.3, color: fg } }, name),
         React.createElement("p", { style: { fontSize: 13, color: dark ? "#9ca3af" : "#4b5563", lineHeight: 1.5, marginBottom: 24 } }, tagline),
         React.createElement("div", { style: { display: "flex", justifyContent: "space-between", alignItems: "center" } },
           React.createElement("span", { style: { fontSize: 20, fontWeight: 600, color: ACCENT } }, formatPrice(product.price, currency)),
           React.createElement("div", { style: { display: "flex", gap: 8 } },
-            React.createElement("button", { onClick: () => navigate("product", product), style: { padding: "6px 14px", background: "transparent", border: `1px solid ${border}`, color: fg, fontSize: 10, letterSpacing: 1, borderRadius: 40, cursor: "pointer" } }, language === 'ru' ? "ДЕТАЛИ" : "DETAILS"),
-            React.createElement("button", { onClick: () => addToCart(product), style: { padding: "6px 14px", background: ACCENT, border: "none", color: "#000", fontSize: 10, fontWeight: 700, borderRadius: 40, cursor: "pointer" } }, language === 'ru' ? "+ В КОРЗИНУ" : "+ TO CART")
+            React.createElement("button", { onClick: () => navigate("product", product), style: { padding: "6px 14px", background: "transparent", border: `1px solid ${border}`, color: fg, fontSize: 10, letterSpacing: 1, borderRadius: 40, cursor: "pointer" } }, language === 'ru' ? "ДЕТАЛИ" : (language === 'en' ? "DETAILS" : "ДЕТАЛІ")),
+            React.createElement("button", { onClick: () => addToCart(product), style: { padding: "6px 14px", background: ACCENT, border: "none", color: "#000", fontSize: 10, fontWeight: 700, borderRadius: 40, cursor: "pointer" } }, language === 'ru' ? "КУПИТЬ" : (language === 'en' ? "BUY" : "КУПИТИ"))
           )
         )
       );
     }
 
-    // ─── ГЛАВНАЯ СТРАНИЦА ────────────────────────────────────────
+    // ─── ГЛАВНАЯ СТРАНИЦА (без изменений, кроме передачи языка) ───
     function HomePage({ dark, fg, border, products, navigate, addToCart, language, currency }) {
       const [scrollY, setScrollY] = React.useState(0);
       React.useEffect(() => { const h = () => setScrollY(window.scrollY); window.addEventListener("scroll", h); return () => window.removeEventListener("scroll", h); }, []);
@@ -222,7 +275,7 @@
       return React.createElement("div", null,
         React.createElement("section", { style: { minHeight: "100vh", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", position: "relative", overflow: "hidden", paddingTop: 64 } },
           React.createElement("div", { style: { position: "absolute", inset: 0, backgroundImage: `radial-gradient(circle at 20% 40%, ${ACCENT}11 0%, transparent 60%)`, transform: `translateY(${scrollY * 0.2}px)` } }),
-          React.createElement("div", { style: { animation: "float 6s ease-in-out infinite", marginBottom: 40 } }, React.createElement(SeedOrb, { size: 200 })),
+          React.createElement("div", { style: { animation: "float 6s ease-in-out infinite", marginBottom: 40 } }, React.createElement(LeafOrb, { size: 200 })),
           React.createElement("div", { style: { textAlign: "center", animation: "fadeUp 0.8s ease both", maxWidth: "90%" } },
             React.createElement("p", { style: { fontFamily: "'Space Mono', monospace", fontSize: 11, letterSpacing: 4, color: ACCENT, marginBottom: 16 } }, t.heroTag),
             React.createElement("h1", { style: { fontSize: "clamp(40px, 9vw, 80px)", fontWeight: 700, letterSpacing: -2, lineHeight: 1.1, marginBottom: 24, color: fg } },
@@ -231,7 +284,7 @@
             React.createElement("p", { style: { fontSize: 18, color: muted, maxWidth: 520, margin: "0 auto 40px", lineHeight: 1.6 } }, t.heroDesc),
             React.createElement("div", { style: { display: "flex", gap: 16, justifyContent: "center", flexWrap: "wrap" } },
               React.createElement("button", { onClick: () => navigate("catalog"), style: { padding: "14px 32px", background: ACCENT, color: "#000", border: "none", fontSize: 13, fontWeight: 700, borderRadius: 60, cursor: "pointer" } }, t.btnCatalog),
-              React.createElement("button", { onClick: () => navigate("catalog"), style: { padding: "14px 32px", background: "transparent", color: fg, border: `1px solid ${border}`, fontSize: 13, borderRadius: 60, cursor: "pointer" } }, t.btnAbout)
+              React.createElement("a", { href: TELEGRAM_LINK, target: "_blank", style: { padding: "14px 32px", background: "transparent", color: fg, border: `1px solid ${border}`, fontSize: 13, borderRadius: 60, cursor: "pointer", textDecoration: "none", display: "inline-block" } }, t.telegramButton)
             )
           ),
           React.createElement("div", { style: { position: "absolute", bottom: 30, left: "50%", transform: "translateX(-50%)", opacity: 0.4, textAlign: "center" } },
@@ -260,10 +313,13 @@
       );
     }
 
-    // ─── КАТАЛОГ ────────────────────────────────────────────────
+    // ─── КАТАЛОГ (адаптирован под три языка) ─────────────────────
     function CatalogPage({ dark, fg, border, products, navigate, addToCart, filter, setFilter, search, setSearch, language, currency }) {
       const t = TRANSLATIONS[language];
-      const categories = t.categories;
+      let categories;
+      if (language === 'ru') categories = ["Все", "Феминизированные", "Автоцветущие", "Регулярные"];
+      else if (language === 'en') categories = ["All", "Feminized", "Autoflowering", "Regular"];
+      else categories = ["Всі", "Фемінізовані", "Автоцвітні", "Регулярні"];
       const muted = dark ? "#9ca3af" : "#4b5563";
       return React.createElement("div", { style: { padding: "100px 24px 80px", minHeight: "100vh" } },
         React.createElement("div", { style: { marginBottom: 48, animation: "fadeUp 0.6s ease both" } },
@@ -280,28 +336,34 @@
       );
     }
 
-    // ─── СТРАНИЦА ТОВАРА ────────────────────────────────────────
+    // ─── СТРАНИЦА ТОВАРА (адаптирована под три языка) ───────────
     function ProductPage({ product, dark, fg, border, navigate, addToCart, language, currency }) {
       const [qty, setQty] = React.useState(1);
       const muted = dark ? "#9ca3af" : "#4b5563";
       const barcode = React.useMemo(() => generateBarcode(product.id), [product.id]);
       const t = TRANSLATIONS[language];
-      const name = language === 'ru' ? product.name : product.nameEn;
-      const description = language === 'ru' ? product.description : product.descriptionEn;
-      const category = language === 'ru' ? product.category : product.categoryEn;
-      const tags = language === 'ru' ? product.tags : (product.tagsEn || product.tags);
-      // Спецификации
-      const specEntries = Object.entries(product.specs).slice(0,4);
+      let name, description, category, tags, specsLocal;
+      if (language === 'ru') {
+        name = product.name; description = product.description; category = product.category; tags = product.tags;
+        specsLocal = { ...product.specs, type: product.specs.type };
+      } else if (language === 'en') {
+        name = product.nameEn; description = product.descriptionEn; category = product.categoryEn; tags = product.tagsEn;
+        specsLocal = { ...product.specs, type: product.specs.typeEn };
+      } else {
+        name = product.nameUa || product.name; description = product.descriptionUa || product.description;
+        category = product.categoryUa || product.category; tags = product.tagsUa || product.tags;
+        specsLocal = { ...product.specs, type: product.specs.typeUa || product.specs.type };
+      }
+      const specEntries = Object.entries(specsLocal).slice(0,4);
       const specLabels = {
-        yield: language === 'ru' ? "Урожайность" : "Yield",
-        protein: "Protein", resistance: "Resistance", origin: "Origin", oil: "Oil",
-        n: "N", p: "P", k: "K", duration: "Duration (days)", volume: "Volume (L)", ph: "pH", organic: "Organic %",
-        humic: "Humic %", amino: "Amino %", application: language === 'ru' ? "Применение" : "Application"
+        thc: "THC %", flowering: language === 'ru' ? "Цветение" : (language === 'en' ? "Flowering" : "Цвітіння"),
+        yield: language === 'ru' ? "Урожай (г/м²)" : (language === 'en' ? "Yield (g/m²)" : "Врожай (г/м²)"),
+        type: language === 'ru' ? "Тип" : (language === 'en' ? "Type" : "Тип")
       };
       return React.createElement("div", { style: { paddingTop: 70, minHeight: "100vh" } },
         React.createElement("div", { style: { padding: "20px 24px" }, onClick: () => navigate("catalog") }, React.createElement("span", { style: { cursor: "pointer", color: ACCENT, fontFamily: "'Space Mono', monospace", fontSize: 12 } }, t.productBack)),
         React.createElement("div", { style: { display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: 40, padding: "0 24px 80px" } },
-          React.createElement("div", { style: { display: "flex", justifyContent: "center" } }, React.createElement(SeedOrb, { size: 240, glow: true })),
+          React.createElement("div", { style: { display: "flex", justifyContent: "center" } }, React.createElement(LeafOrb, { size: 240, glow: true })),
           React.createElement("div", null,
             React.createElement("div", { style: { fontFamily: "'Space Mono', monospace", fontSize: 12, color: ACCENT } }, category),
             React.createElement("h1", { style: { fontSize: "clamp(32px, 6vw, 48px)", margin: "12px 0 8px", color: fg } }, name),
@@ -322,7 +384,7 @@
               )
             ),
             React.createElement("button", { onClick: () => { for(let i=0;i<qty;i++) addToCart(product); }, style: { width: "100%", padding: 16, background: ACCENT, border: "none", borderRadius: 60, fontWeight: 700, fontSize: 14, cursor: "pointer" } }, 
-              `${language === 'ru' ? "Добавить в корзину" : "Add to cart"} — ${formatPrice(product.price * qty, currency)}`)
+              `${language === 'ru' ? "Добавить в корзину" : (language === 'en' ? "Add to cart" : "Додати в кошик")} — ${formatPrice(product.price * qty, currency)}`)
           )
         ),
         React.createElement("div", { style: { margin: "0 24px 60px", padding: 32, border: `1px solid ${border}`, borderRadius: 32, background: dark ? "#0f172a" : "#f8fafc" } },
@@ -334,7 +396,7 @@
       );
     }
 
-    // ─── КОРЗИНА ────────────────────────────────────────────────
+    // ─── КОРЗИНА (адаптирована) ──────────────────────────────────
     function CartPage({ cart, dark, fg, border, navigate, removeFromCart, updateQty, cartTotalRub, language, currency }) {
       const t = TRANSLATIONS[language];
       const muted = dark ? "#9ca3af" : "#4b5563";
@@ -347,8 +409,10 @@
         React.createElement("h1", { style: { fontSize: "clamp(32px, 6vw, 48px)", marginBottom: 40, color: fg } }, t.cartTitle),
         React.createElement("div", { style: { display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 16, marginBottom: 40 } },
           cart.map(item => {
-            const name = language === 'ru' ? item.name : item.nameEn;
-            const category = language === 'ru' ? item.category : item.categoryEn;
+            let name = item.name;
+            let category = item.category;
+            if (language === 'en') { name = item.nameEn; category = item.categoryEn; }
+            if (language === 'ua') { name = item.nameUa || item.name; category = item.categoryUa || item.category; }
             return React.createElement("div", { key: item.id, style: { display: "flex", justifyContent: "space-between", alignItems: "center", padding: 16, border: `1px solid ${border}`, borderRadius: 24, background: dark ? "#111827" : "#fff", flexWrap: "wrap", gap: 12 } },
               React.createElement("div", null, React.createElement("h3", { style: { fontSize: 18 } }, name), React.createElement("div", { style: { fontSize: 12, color: muted } }, category)),
               React.createElement("div", { style: { display: "flex", alignItems: "center", gap: 12 } },
@@ -368,7 +432,7 @@
       );
     }
 
-    // ─── ОФОРМЛЕНИЕ ──────────────────────────────────────────────
+    // ─── ОФОРМЛЕНИЕ (адаптировано) ────────────────────────────────
     function CheckoutPage({ dark, fg, border, navigate, cartTotalRub, language, currency }) {
       const [form, setForm] = React.useState({ name: "", phone: "", address: "" });
       const [done, setDone] = React.useState(false);
@@ -407,7 +471,10 @@
       const showToast = msg => { setToast(msg); setTimeout(() => setToast(""), 2500); };
       const addToCart = product => {
         setCart(prev => { const ex = prev.find(i => i.id === product.id); return ex ? prev.map(i => i.id === product.id ? {...i, qty: i.qty+1} : i) : [...prev, {...product, qty: 1}]; });
-        showToast(`${language === 'ru' ? product.name : product.nameEn} добавлен`);
+        let name = product.name;
+        if (language === 'en') name = product.nameEn;
+        if (language === 'ua') name = product.nameUa || product.name;
+        showToast(`${name} добавлен`);
       };
       const removeFromCart = id => setCart(prev => prev.filter(i => i.id !== id));
       const updateQty = (id, d) => setCart(prev => prev.map(i => i.id === id ? {...i, qty: Math.max(1, i.qty + d)} : i));
@@ -418,13 +485,20 @@
       const filtered = React.useMemo(() => {
         let catFilter = filter;
         if (language === 'en') {
-          const map = { "Все": "All", "Семена": "Seeds", "Удобрения": "Fertilizers", "Биопрепараты": "Biopreparations", "Грунты": "Soils" };
+          const map = { "Все": "All", "Феминизированные": "Feminized", "Автоцветущие": "Autoflowering", "Регулярные": "Regular" };
+          catFilter = map[filter] || filter;
+        }
+        if (language === 'ua') {
+          const map = { "Все": "Всі", "Феминизированные": "Фемінізовані", "Автоцветущие": "Автоцвітні", "Регулярные": "Регулярні" };
           catFilter = map[filter] || filter;
         }
         return PRODUCTS.filter(p => {
-          const categoryMatch = (filter === "Все" || (language === 'ru' ? p.category : p.categoryEn) === catFilter);
-          const nameField = language === 'ru' ? p.name : p.nameEn;
-          const tagsField = language === 'ru' ? p.tags : (p.tagsEn || p.tags);
+          let categoryMatch = false;
+          if (language === 'ru') categoryMatch = (filter === "Все" || p.category === catFilter);
+          else if (language === 'en') categoryMatch = (filter === "All" || p.categoryEn === catFilter);
+          else categoryMatch = (filter === "Всі" || (p.categoryUa || p.category) === catFilter);
+          const nameField = language === 'ru' ? p.name : (language === 'en' ? p.nameEn : (p.nameUa || p.name));
+          const tagsField = language === 'ru' ? p.tags : (language === 'en' ? p.tagsEn : (p.tagsUa || p.tags));
           const searchMatch = nameField.toLowerCase().includes(search.toLowerCase()) || tagsField.some(t => t.toLowerCase().includes(search.toLowerCase()));
           return categoryMatch && searchMatch;
         });
@@ -441,12 +515,14 @@
           React.createElement("div", { style: { display: "flex", gap: 12, alignItems: "center", flexWrap: "wrap" } },
             React.createElement("select", { value: language, onChange: e => setLanguage(e.target.value), style: { background: "transparent", border: `1px solid ${border}`, borderRadius: 40, padding: "4px 8px", fontSize: 10, cursor: "pointer", color: fg } },
               React.createElement("option", { value: "ru" }, "🇷🇺 RU"),
-              React.createElement("option", { value: "en" }, "🇬🇧 EN")
+              React.createElement("option", { value: "en" }, "🇬🇧 EN"),
+              React.createElement("option", { value: "ua" }, "🇺🇦 UA")
             ),
             React.createElement("select", { value: currency, onChange: e => setCurrency(e.target.value), style: { background: "transparent", border: `1px solid ${border}`, borderRadius: 40, padding: "4px 8px", fontSize: 10, cursor: "pointer", color: fg } },
               React.createElement("option", { value: "RUB" }, t.currencyRUB),
               React.createElement("option", { value: "USD" }, t.currencyUSD),
-              React.createElement("option", { value: "EUR" }, t.currencyEUR)
+              React.createElement("option", { value: "EUR" }, t.currencyEUR),
+              React.createElement("option", { value: "UAH" }, t.currencyUAH)
             ),
             React.createElement("span", { onClick: () => navigate("catalog"), style: { fontSize: 12, cursor: "pointer" } }, t.navCatalog),
             React.createElement("span", { onClick: () => navigate("cart"), style: { position: "relative", cursor: "pointer" } }, "🛒", cartCount > 0 && React.createElement("span", { style: { position: "absolute", top: -8, right: -12, background: ACCENT, color: "#000", borderRadius: "50%", width: 16, height: 16, fontSize: 10, display: "flex", alignItems: "center", justifyContent: "center" } }, cartCount)),
