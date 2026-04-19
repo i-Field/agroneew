@@ -1,547 +1,713 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>Agroneew — Агро-технологии и селекция</title>
-  <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
-  <!-- React + ReactDOM + Babel Standalone -->
-  <script src="https://cdn.jsdelivr.net/npm/react@18.2.0/umd/react.development.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/react-dom@18.2.0/umd/react-dom.development.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@babel/standalone/babel.min.js"></script>
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { overflow-x: hidden; background: #0a0c12; }
-    ::-webkit-scrollbar { width: 3px; }
-    ::-webkit-scrollbar-thumb { background: #14b8a6; }
-    ::-webkit-scrollbar-track { background: #1e293b; }
-    @keyframes float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-22px); } }
-    @keyframes pulse-ring { 0% { transform: translate(-50%,-50%) scale(1); opacity: 0.5; } 100% { transform: translate(-50%,-50%) scale(2.8); opacity: 0; } }
-    @keyframes fadeUp { from { opacity: 0; transform: translateY(36px); } to { opacity: 1; transform: translateY(0); } }
-    @keyframes toast-in { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
-    @keyframes slide-nav { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }
-    @keyframes gridMove { 0% { background-position: 0 0; } 100% { background-position: 60px 60px; } }
-    button:focus { outline: none; }
-    input:focus, select:focus { outline: 1px solid #14b8a6; outline-offset: -1px; }
-    select, option { background: inherit; color: inherit; }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>AGRONEEW — Агро нового времени</title>
+    <!-- Favicon (data:image/svg+xml) -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='45' fill='%231a2e1a' stroke='%23D4AF37' stroke-width='2'/%3E%3Cpath fill='%234CAF50' d='M50 30 L65 55 L35 55 Z'/%3E%3Cpath fill='%23D4AF37' d='M50 70 L35 45 L65 45 Z'/%3E%3C/svg%3E">
+    <meta name="description" content="Агро нового времени: рынки, семена, технологии, аналитика. Ежедневный инструмент фермера и инвестора.">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #0A0F0D;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            color: #EFF3E8;
+            line-height: 1.5;
+            scroll-behavior: smooth;
+        }
+
+        /* Glassmorphism & Theme */
+        :root {
+            --bg-dark: #0A0F0D;
+            --surface-dark: rgba(18, 25, 20, 0.75);
+            --surface-glass: rgba(30, 40, 30, 0.6);
+            --green-primary: #2E7D32;
+            --green-accent: #4CAF50;
+            --gold: #D4AF37;
+            --gold-glow: rgba(212, 175, 55, 0.2);
+            --border-light: rgba(80, 100, 70, 0.4);
+            --text-secondary: #B8C7B2;
+        }
+
+        /* Custom scroll */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #141E18;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--green-primary);
+            border-radius: 10px;
+        }
+
+        /* Layout */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        /* Header & Nav */
+        .header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(16px);
+            background: rgba(10, 15, 13, 0.85);
+            border-bottom: 1px solid var(--border-light);
+            padding: 0.8rem 0;
+        }
+        .nav-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            font-size: 1.7rem;
+            font-weight: 700;
+        }
+        .logo-icon {
+            background: linear-gradient(135deg, var(--green-accent), var(--gold));
+            width: 36px;
+            height: 36px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+        }
+        .logo span {
+            background: linear-gradient(135deg, #FFF, var(--gold));
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+        .nav-links {
+            display: flex;
+            gap: 1.8rem;
+            font-weight: 500;
+        }
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-secondary);
+            transition: 0.2s;
+        }
+        .nav-links a:hover {
+            color: var(--gold);
+        }
+        .search-lang {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+        .search-box {
+            background: rgba(30, 40, 30, 0.7);
+            border-radius: 40px;
+            padding: 0.4rem 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            border: 1px solid var(--border-light);
+        }
+        .search-box input {
+            background: transparent;
+            border: none;
+            color: white;
+            font-size: 0.9rem;
+            outline: none;
+            width: 140px;
+        }
+        .lang-switch {
+            display: flex;
+            gap: 0.4rem;
+            background: rgba(0,0,0,0.4);
+            padding: 0.3rem 0.6rem;
+            border-radius: 30px;
+        }
+        .lang-btn {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-weight: 600;
+            padding: 0.2rem 0.5rem;
+            border-radius: 30px;
+            transition: 0.2s;
+        }
+        .lang-btn.active {
+            background: var(--green-primary);
+            color: white;
+        }
+        /* Hero */
+        .hero {
+            padding: 4rem 0 5rem;
+            text-align: center;
+            background: radial-gradient(circle at 20% 30%, rgba(46,125,50,0.15), transparent);
+        }
+        .hero h1 {
+            font-size: 3.8rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #FFFFFF, var(--gold));
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            letter-spacing: -0.02em;
+            margin-bottom: 1rem;
+        }
+        .hero .sub {
+            font-size: 1.3rem;
+            color: var(--text-secondary);
+            max-width: 700px;
+            margin: 0 auto 2rem;
+        }
+        .cta-group {
+            display: flex;
+            justify-content: center;
+            gap: 1.2rem;
+            flex-wrap: wrap;
+        }
+        .btn {
+            padding: 0.9rem 2rem;
+            border-radius: 60px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: 0.2s;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+        .btn-primary {
+            background: linear-gradient(95deg, var(--green-primary), var(--green-accent));
+            color: white;
+            box-shadow: 0 4px 12px rgba(46,125,50,0.3);
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(46,125,50,0.4);
+        }
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--gold);
+            color: var(--gold);
+        }
+        .btn-outline:hover {
+            background: var(--gold-glow);
+        }
+
+        /* Ticker */
+        .ticker {
+            background: #0C1410;
+            border-top: 1px solid var(--border-light);
+            border-bottom: 1px solid var(--border-light);
+            padding: 0.7rem 0;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+        .ticker-content {
+            display: inline-block;
+            animation: tickerScroll 28s linear infinite;
+            font-size: 0.95rem;
+            letter-spacing: 0.5px;
+        }
+        .ticker-content span {
+            margin-right: 2rem;
+        }
+        .ticker-content i {
+            color: var(--gold);
+            margin-right: 6px;
+        }
+        @keyframes tickerScroll {
+            0% { transform: translateX(0%); }
+            100% { transform: translateX(-50%); }
+        }
+
+        /* Grid cards */
+        .section-title {
+            font-size: 2rem;
+            font-weight: 600;
+            margin: 2.5rem 0 1.5rem;
+            border-left: 5px solid var(--gold);
+            padding-left: 1rem;
+        }
+        .grid-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 1.8rem;
+            margin-bottom: 2rem;
+        }
+        .card {
+            background: var(--surface-glass);
+            backdrop-filter: blur(8px);
+            border-radius: 28px;
+            border: 1px solid var(--border-light);
+            padding: 1.5rem;
+            transition: all 0.25s;
+        }
+        .card:hover {
+            transform: translateY(-6px);
+            border-color: var(--gold);
+            box-shadow: 0 20px 30px -12px rgba(0,0,0,0.5);
+        }
+        .card i {
+            font-size: 2rem;
+            color: var(--gold);
+            margin-bottom: 1rem;
+        }
+        .card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+        .card p {
+            color: var(--text-secondary);
+            margin-bottom: 1.2rem;
+        }
+        .badge {
+            background: rgba(212,175,55,0.2);
+            color: var(--gold);
+            border-radius: 40px;
+            padding: 0.2rem 0.8rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        /* Live Market Table */
+        .market-panel {
+            background: var(--surface-dark);
+            backdrop-filter: blur(12px);
+            border-radius: 28px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            border: 1px solid var(--border-light);
+        }
+        .flex-between {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        .price-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+        .price-table th, .price-table td {
+            padding: 0.8rem 0.4rem;
+            border-bottom: 1px solid var(--border-light);
+            text-align: left;
+        }
+        .positive {
+            color: #6fcf97;
+        }
+        .negative {
+            color: #e67e7e;
+        }
+        .index-big {
+            font-size: 2rem;
+            font-weight: 700;
+        }
+
+        /* risk + weather */
+        .row-2col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin: 1rem 0;
+        }
+        @media (max-width: 760px) {
+            .row-2col { grid-template-columns: 1fr; }
+            .hero h1 { font-size: 2.2rem; }
+            .container { padding: 0 1.2rem; }
+            .nav-links { display: none; } /* упрощённо для мобилы, но можно гамбургер, оставляем основное */
+            .search-box input { width: 100px; }
+        }
+
+        footer {
+            margin-top: 4rem;
+            background: #07120B;
+            border-top: 1px solid var(--border-light);
+            padding: 2rem 0;
+            font-size: 0.85rem;
+            color: #8f9e8a;
+        }
+        .footer-grid {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+        }
+        .footer-links a {
+            color: #B8C7B2;
+            text-decoration: none;
+            margin-right: 1.5rem;
+        }
+    </style>
 </head>
 <body>
-  <div id="root"></div>
 
-  <script type="text/babel">
-    // ─────────────────────────────────────────────────────────────
-    //  CONSTANTS & THEME
-    // ─────────────────────────────────────────────────────────────
-    const ACCENT = "#14b8a6";
-    const ACCENT_DARK = "#0f766e";
-    const BG_DARK = "#0a0c12";
-    const BG_LIGHT = "#f8fafc";
-    const FG_DARK = "#eef2ff";
-    const FG_LIGHT = "#0f172a";
+<header class="header">
+    <div class="container nav-container">
+        <div class="logo">
+            <div class="logo-icon"><i class="fas fa-seedling"></i></div>
+            <span>AGRONEEW</span>
+        </div>
+        <div class="nav-links">
+            <a href="#" data-i18n="nav_news">Новости</a>
+            <a href="#" data-i18n="nav_seeds">Семена</a>
+            <a href="#" data-i18n="nav_analytics">Аналитика</a>
+            <a href="#" data-i18n="nav_tech">Технологии</a>
+        </div>
+        <div class="search-lang">
+            <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="Поиск..." data-i18n-placeholder="search_placeholder">
+            </div>
+            <div class="lang-switch">
+                <button class="lang-btn" data-lang="ru">RU</button>
+                <button class="lang-btn" data-lang="en">EN</button>
+            </div>
+        </div>
+    </div>
+</header>
 
-    // Курсы валют (базовая USD)
-    const EXCHANGE_RATES = { USD: 1, EUR: 0.92, UAH: 39 };
-    const CURRENCY_SYMBOLS = { USD: "$", EUR: "€", UAH: "₴" };
-    const BASE_CURRENCY = "USD";
+<main>
+    <!-- Hero -->
+    <div class="hero">
+        <div class="container">
+            <h1 data-i18n="hero_title">Агро нового времени</h1>
+            <div class="sub" data-i18n="hero_desc">Рынки. Семена. Технологии. Всё в одном потоке.</div>
+            <div class="cta-group">
+                <a href="#" class="btn btn-primary" data-i18n="btn_news">Новости</a>
+                <a href="#" class="btn btn-outline" data-i18n="btn_catalog">Каталог семян</a>
+                <a href="#" class="btn btn-outline" data-i18n="btn_analytics">Аналитика</a>
+            </div>
+        </div>
+    </div>
 
-    // Функция определения валюты по локали браузера
-    function detectCurrencyByLocale() {
-      const locale = navigator.language || navigator.userLanguage || "en-US";
-      if (locale.includes("UA") || locale.includes("uk")) return "UAH";
-      if (locale.includes("RU")) return "USD"; // для России оставляем USD, но можно настроить
-      if (locale.includes("EU") || locale.includes("DE") || locale.includes("FR")) return "EUR";
-      return "USD";
-    }
+    <!-- Бегущая строка цен / новостей -->
+    <div class="ticker">
+        <div class="ticker-content" id="tickerText">
+            <!-- динамически через JS -->
+        </div>
+    </div>
 
-    // Данные продуктов (полностью переработаны под агро-тематику, без психоактивных упоминаний)
-    const PRODUCTS = [
-      { id: "H-101", name: "Futura 75", nameEn: "Futura 75", nameUa: "Futura 75", category: "Industrial Fiber Hemp", categoryEn: "Industrial Fiber Hemp", categoryUa: "Промислове волокно", priceUSD: 42,
-        tagline: "High-yield fiber hemp", taglineEn: "High-yield fiber hemp", taglineUa: "Високоврожайне волокно",
-        description: "Certified EU industrial hemp variety. Stem height up to 3.5m, fiber content 32%. THC <0.2%. Ideal for textile and biocomposite industries.",
-        descriptionEn: "Certified EU industrial hemp variety. Stem height up to 3.5m, fiber content 32%. THC <0.2%. Ideal for textile and biocomposite industries.",
-        descriptionUa: "Сертифікований європейський сорт промислової коноплі. Висота стебла до 3.5м, вміст волокна 32%. ТГК <0.2%. Ідеальний для текстильної та біокомпозитної промисловості.",
-        tags: ["Fiber", "Industrial", "Low THC"], tagsEn: ["Fiber", "Industrial", "Low THC"], tagsUa: ["Волокно", "Промисловий", "Низький ТГК"],
-        specs: { height: "3.5m", fiber: "32%", cycle: "110 days", use: "Textile, biocomposites" } },
-      { id: "H-102", name: "Finola", nameEn: "Finola", nameUa: "Finola", category: "Oilseed Hemp", categoryEn: "Oilseed Hemp", categoryUa: "Олійна конопля", priceUSD: 38,
-        tagline: "Premium oilseed genetics", taglineEn: "Premium oilseed genetics", taglineUa: "Преміальна олійна генетика",
-        description: "Finnish oilseed hemp variety. Seed oil content 44%, rich in Omega-3/6. Short vegetation period (90 days). For cold climates.",
-        descriptionEn: "Finnish oilseed hemp variety. Seed oil content 44%, rich in Omega-3/6. Short vegetation period (90 days). For cold climates.",
-        descriptionUa: "Фінський олійний сорт коноплі. Вміст олії в насінні 44%, багатий Омега-3/6. Короткий вегетаційний період (90 днів). Для холодного клімату.",
-        tags: ["Oilseed", "Omega-3", "Short cycle"], tagsEn: ["Oilseed", "Omega-3", "Short cycle"], tagsUa: ["Олійний", "Омега-3", "Короткий цикл"],
-        specs: { oil: "44%", omega: "3:1", cycle: "90 days", use: "Food, cosmetics" } },
-      { id: "H-103", name: "Carmagnola", nameEn: "Carmagnola", nameUa: "Carmagnola", category: "Photoperiodic Varieties", categoryEn: "Photoperiodic Varieties", categoryUa: "Фотоперіодичні сорти", priceUSD: 48,
-        tagline: "Classic Italian dual-purpose", taglineEn: "Classic Italian dual-purpose", taglineUa: "Класичний італійський подвійного призначення",
-        description: "Traditional photoperiodic variety. Suitable for both fiber and seed production. High resistance to diseases.",
-        descriptionEn: "Traditional photoperiodic variety. Suitable for both fiber and seed production. High resistance to diseases.",
-        descriptionUa: "Традиційний фотоперіодичний сорт. Підходить як для волокна, так і для насіння. Висока стійкість до хвороб.",
-        tags: ["Photoperiod", "Dual-purpose", "Disease resistant"], tagsEn: ["Photoperiod", "Dual-purpose", "Disease resistant"], tagsUa: ["Фотоперіод", "Подвійне призначення", "Стійкий"],
-        specs: { height: "3m", fiber: "28%", cycle: "130 days", use: "Fiber, seed" } },
-      { id: "H-104", name: "USO 31", nameEn: "USO 31", nameUa: "USO 31", category: "Research Genetics Lines", categoryEn: "Research Genetics Lines", categoryUa: "Дослідницькі лінії", priceUSD: 55,
-        tagline: "Experimental low-THC line", taglineEn: "Experimental low-THC line", taglineUa: "Експериментальна лінія з низьким ТГК",
-        description: "Breeding line for minimal THC content (<0.1%) and high CBD production. For research institutions only.",
-        descriptionEn: "Breeding line for minimal THC content (<0.1%) and high CBD production. For research institutions only.",
-        descriptionUa: "Селекційна лінія з мінімальним вмістом ТГК (<0.1%) та високим виробництвом КБР. Тільки для дослідницьких установ.",
-        tags: ["Research", "Low THC", "CBD rich"], tagsEn: ["Research", "Low THC", "CBD rich"], tagsUa: ["Дослідження", "Низький ТГК", "Багатий КБР"],
-        specs: { thc: "<0.1%", cbd: "up to 12%", cycle: "120 days", use: "Research, pharma" } },
-      { id: "H-105", name: "Ferimon", nameEn: "Ferimon", nameUa: "Ferimon", category: "Industrial Fiber Hemp", categoryEn: "Industrial Fiber Hemp", categoryUa: "Промислове волокно", priceUSD: 45,
-        tagline: "High-density fiber crop", taglineEn: "High-density fiber crop", taglineUa: "Високощільна волокниста культура",
-        description: "French fiber hemp variety. Excellent for paper and building materials. Very low THC.",
-        descriptionEn: "French fiber hemp variety. Excellent for paper and building materials. Very low THC.",
-        descriptionUa: "Французький волокнистий сорт коноплі. Чудово підходить для паперу та будівельних матеріалів. Дуже низький ТГК.",
-        tags: ["Fiber", "Paper", "Construction"], tagsEn: ["Fiber", "Paper", "Construction"], tagsUa: ["Волокно", "Папір", "Будівництво"],
-        specs: { height: "4m", fiber: "35%", cycle: "120 days", use: "Paper, insulation" } },
-      { id: "H-106", name: "Helena", nameEn: "Helena", nameUa: "Helena", category: "Oilseed Hemp", categoryEn: "Oilseed Hemp", categoryUa: "Олійна конопля", priceUSD: 40,
-        tagline: "Cold-tolerant oilseed", taglineEn: "Cold-tolerant oilseed", taglineUa: "Холодостійка олійна",
-        description: "Polish oilseed hemp. High protein content in seeds. Suitable for northern latitudes.",
-        descriptionEn: "Polish oilseed hemp. High protein content in seeds. Suitable for northern latitudes.",
-        descriptionUa: "Польська олійна конопля. Високий вміст білка в насінні. Підходить для північних широт.",
-        tags: ["Oilseed", "Protein", "Cold tolerant"], tagsEn: ["Oilseed", "Protein", "Cold tolerant"], tagsUa: ["Олійний", "Білок", "Холодостійкий"],
-        specs: { oil: "42%", protein: "26%", cycle: "100 days", use: "Food, feed" } },
-      { id: "H-107", name: "Tygra", nameEn: "Tygra", nameUa: "Tygra", category: "Photoperiodic Varieties", categoryEn: "Photoperiodic Varieties", categoryUa: "Фотоперіодичні сорти", priceUSD: 52,
-        tagline: "Hungarian dual-purpose", taglineEn: "Hungarian dual-purpose", taglineUa: "Угорський подвійного призначення",
-        description: "Photoperiodic variety with excellent seed yield and fiber quality. Resistant to lodging.",
-        descriptionEn: "Photoperiodic variety with excellent seed yield and fiber quality. Resistant to lodging.",
-        descriptionUa: "Фотоперіодичний сорт з відмінною врожайністю насіння та якістю волокна. Стійкий до вилягання.",
-        tags: ["Photoperiod", "Seed", "Lodging resistant"], tagsEn: ["Photoperiod", "Seed", "Lodging resistant"], tagsUa: ["Фотоперіод", "Насіння", "Стійкий до вилягання"],
-        specs: { seedYield: "1.2 t/ha", fiber: "30%", cycle: "125 days", use: "Seed, fiber" } },
-      { id: "H-108", name: "Bialobrzeskie", nameEn: "Bialobrzeskie", nameUa: "Bialobrzeskie", category: "Industrial Fiber Hemp", categoryEn: "Industrial Fiber Hemp", categoryUa: "Промислове волокно", priceUSD: 44,
-        tagline: "Polish fiber standard", taglineEn: "Polish fiber standard", taglineUa: "Польський волокнистий стандарт",
-        description: "Well-established fiber hemp variety. High biomass yield, low THC. Perfect for agro-industry.",
-        descriptionEn: "Well-established fiber hemp variety. High biomass yield, low THC. Perfect for agro-industry.",
-        descriptionUa: "Добре відомий волокнистий сорт коноплі. Високий вихід біомаси, низький ТГК. Ідеальний для агропромисловості.",
-        tags: ["Fiber", "Biomass", "Proven"], tagsEn: ["Fiber", "Biomass", "Proven"], tagsUa: ["Волокно", "Біомаса", "Перевірений"],
-        specs: { height: "3.2m", fiber: "31%", cycle: "115 days", use: "Fiber, bioenergy" } }
-    ];
+    <div class="container">
+        <!-- Агро Индекс дня + погода + рекомендации -->
+        <div class="row-2col">
+            <div class="market-panel">
+                <div class="flex-between">
+                    <h3><i class="fas fa-chart-line"></i> <span data-i18n="agro_index">Агро индекс дня</span></h3>
+                    <span class="badge" data-i18n="live">LIVE</span>
+                </div>
+                <div class="index-big" id="agroIndexValue">1245.67</div>
+                <div id="agroChange" class="positive">+0.82% ▲</div>
+                <p data-i18n="index_desc">Интегральный показатель рынка зерновых и масличных</p>
+            </div>
+            <div class="market-panel">
+                <h3><i class="fas fa-cloud-sun"></i> <span data-i18n="weather_impact">Погода + влияние на урожай</span></h3>
+                <div id="weatherBlock">
+                    <div><i class="fas fa-map-marker-alt"></i> Черноземье, RU</div>
+                    <div><span id="weatherTemp">+22°C</span> | <span id="weatherDesc">Переменная облачность</span></div>
+                    <div class="positive" data-i18n="weather_good">Влияние: благоприятное, влажность оптимальна</div>
+                </div>
+            </div>
+        </div>
 
-    // ─── ПЕРЕВОДЫ ИНТЕРФЕЙСА (RU, EN, UA) ──────────────────────
-    const TRANSLATIONS = {
-      ru: {
-        navCatalog: "КАТАЛОГ", navCart: "🛒", themeDark: "🌙", themeLight: "☀️",
-        heroTag: "АГРО-ТЕХ ИННОВАЦИИ", heroTitle1: "Выращивай", heroTitleAccent: "устойчивое", heroTitle2: "будущее",
-        heroDesc: "Промышленная конопля, фотопериодические сорта, масличные и волокнистые культуры. Селекционные линии для исследовательских целей.",
-        btnCatalog: "КАТАЛОГ →", btnAbout: "О НАС",
-        stats: [["150+", "Сортов"], ["99%", "Всхожесть"], ["24/7", "Поддержка"]],
-        featuredTitle: "ПОПУЛЯРНЫЕ КУЛЬТУРЫ", featuredSubtitle: "Лидеры агроселекции", featuredLink: "Все сорта →",
-        aboutSection: "Agroneew — это платформа сельскохозяйственной генетики и инноваций, сосредоточенная на устойчивой селекции культур, фотопериодических исследованиях и развитии промышленной конопли. Мы объединяем управляемый данными отбор, современную агрономию и цифровые инструменты для поддержки нового поколения агроэкосистем.",
-        btnToCatalog: "В каталог",
-        catalogHeader: "АГРО-КАТАЛОГ", catalogTitle: "Селекционные линии", searchPlaceholder: "🔍 Поиск по названию или тегу...",
-        categories: ["Все", "Промышленное волокно", "Масличная конопля", "Фотопериодические сорта", "Исследовательские линии"],
-        noResults: "🌾 Ничего не найдено",
-        productBack: "← НАЗАД В КАТАЛОГ",
-        geneticPassport: "АГРОНОМИЧЕСКИЙ ПАСПОРТ",
-        emptyCart: "Корзина пуста", goToCatalog: "Перейти в каталог",
-        cartTitle: "Ваша корзина", total: "Итого:", checkout: "Оформить заказ",
-        checkoutTitle: "Оформление", namePlaceholder: "Ваше имя", phonePlaceholder: "Telegram / Email", addressPlaceholder: "Адрес доставки",
-        orderConfirm: "Подтвердить заказ", orderSuccess: "Заказ принят!", orderDesc: "Мы свяжемся с вами в Telegram в ближайшее время.",
-        backHome: "На главную", footer: "Agroneew © 2026 — Агро-информация нового поколения",
-        currencyUSD: "USD", currencyEUR: "EUR", currencyUAH: "UAH", language: "Язык",
-        telegramButton: "📲 Вступить в Agro Community",
-        aboutTitle: "О платформе",
-        legal1: "For agricultural and research purposes only",
-        legal2: "Not intended for controlled substance use"
-      },
-      en: {
-        navCatalog: "CATALOG", navCart: "🛒", themeDark: "🌙", themeLight: "☀️",
-        heroTag: "AGRO-TECH INNOVATIONS", heroTitle1: "Grow", heroTitleAccent: "sustainable", heroTitle2: "future",
-        heroDesc: "Industrial hemp, photoperiodic varieties, oilseed and fiber crops. Breeding lines for research purposes.",
-        btnCatalog: "CATALOG →", btnAbout: "ABOUT",
-        stats: [["150+", "Varieties"], ["99%", "Germination"], ["24/7", "Support"]],
-        featuredTitle: "POPULAR CROPS", featuredSubtitle: "Breeding leaders", featuredLink: "All varieties →",
-        aboutSection: "Agroneew is an agricultural genetics and innovation platform focused on sustainable crop breeding, photoperiodic plant research, and industrial hemp development. We combine data-driven selection, modern agronomy, and digital tools to support the next generation of farming ecosystems.",
-        btnToCatalog: "Go to catalog",
-        catalogHeader: "AGRO CATALOG", catalogTitle: "Breeding lines", searchPlaceholder: "🔍 Search by name or tag...",
-        categories: ["All", "Industrial Fiber Hemp", "Oilseed Hemp", "Photoperiodic Varieties", "Research Genetics Lines"],
-        noResults: "🌾 Nothing found",
-        productBack: "← BACK TO CATALOG",
-        geneticPassport: "AGRONOMIC PASSPORT",
-        emptyCart: "Cart is empty", goToCatalog: "Go to catalog",
-        cartTitle: "Your cart", total: "Total:", checkout: "Checkout",
-        checkoutTitle: "Checkout", namePlaceholder: "Your name", phonePlaceholder: "Telegram / Email", addressPlaceholder: "Delivery address",
-        orderConfirm: "Confirm order", orderSuccess: "Order accepted!", orderDesc: "We will contact you via Telegram shortly.",
-        backHome: "Home", footer: "Agroneew © 2026 — Next-gen agro information",
-        currencyUSD: "USD", currencyEUR: "EUR", currencyUAH: "UAH", language: "Language",
-        telegramButton: "📲 Join Agro Community",
-        aboutTitle: "About Agroneew",
-        legal1: "For agricultural and research purposes only",
-        legal2: "Not intended for controlled substance use"
-      },
-      ua: {
-        navCatalog: "КАТАЛОГ", navCart: "🛒", themeDark: "🌙", themeLight: "☀️",
-        heroTag: "АГРО-ТЕХ ІННОВАЦІЇ", heroTitle1: "Вирощуй", heroTitleAccent: "стале", heroTitle2: "майбутнє",
-        heroDesc: "Промислова конопля, фотоперіодичні сорти, олійні та волокнисті культури. Селекційні лінії для дослідницьких цілей.",
-        btnCatalog: "КАТАЛОГ →", btnAbout: "ПРО НАС",
-        stats: [["150+", "Сортів"], ["99%", "Схожість"], ["24/7", "Підтримка"]],
-        featuredTitle: "ПОПУЛЯРНІ КУЛЬТУРИ", featuredSubtitle: "Лідери селекції", featuredLink: "Всі сорти →",
-        aboutSection: "Agroneew — це платформа сільськогосподарської генетики та інновацій, зосереджена на сталому вирощуванні культур, фотоперіодичних дослідженнях і розвитку промислової коноплі. Ми поєднуємо керований даними відбір, сучасну агрономію та цифрові інструменти для підтримки нового покоління агроекосистем.",
-        btnToCatalog: "До каталогу",
-        catalogHeader: "АГРО-КАТАЛОГ", catalogTitle: "Селекційні лінії", searchPlaceholder: "🔍 Пошук за назвою або тегом...",
-        categories: ["Всі", "Промислове волокно", "Олійна конопля", "Фотоперіодичні сорти", "Дослідницькі лінії"],
-        noResults: "🌾 Нічого не знайдено",
-        productBack: "← НАЗАД ДО КАТАЛОГУ",
-        geneticPassport: "АГРОНОМІЧНИЙ ПАСПОРТ",
-        emptyCart: "Кошик порожній", goToCatalog: "Перейти до каталогу",
-        cartTitle: "Ваш кошик", total: "Разом:", checkout: "Оформити замовлення",
-        checkoutTitle: "Оформлення", namePlaceholder: "Ваше ім'я", phonePlaceholder: "Telegram / Email", addressPlaceholder: "Адреса доставки",
-        orderConfirm: "Підтвердити замовлення", orderSuccess: "Замовлення прийнято!", orderDesc: "Ми зв'яжемося з вами в Telegram найближчим часом.",
-        backHome: "На головну", footer: "Agroneew © 2026 — Агро-інформація нового покоління",
-        currencyUSD: "USD", currencyEUR: "EUR", currencyUAH: "UAH", language: "Мова",
-        telegramButton: "📲 Приєднатися до Agro Community",
-        aboutTitle: "Про Agroneew",
-        legal1: "Тільки для сільськогосподарських та дослідницьких цілей",
-        legal2: "Не призначено для використання контрольованих речовин"
-      }
-    };
+        <!-- Рынок сегодня + тренды -->
+        <div class="market-panel">
+            <h3><i class="fas fa-chart-simple"></i> <span data-i18n="market_today">Рынок сегодня</span> <span style="font-size:0.8rem;" id="lastUpdate"></span></h3>
+            <table class="price-table" id="priceTable">
+                <thead><tr><th data-i18n="crop">Культура</th><th data-i18n="price">Цена (USD/т)</th><th data-i18n="change">Изм.</th></tr></thead>
+                <tbody id="marketTbody"></tbody>
+            </table>
+            <div style="margin-top:1rem"><span data-i18n="trends_week">🌾 Тренды недели:</span> <span id="trendsList"></span></div>
+        </div>
 
-    // ─── ФУНКЦИИ КОНВЕРТАЦИИ ВАЛЮТ ────────────────────────────
-    function convertPrice(priceUSD, targetCurrency) {
-      if (!EXCHANGE_RATES[targetCurrency]) return priceUSD;
-      return Math.round(priceUSD * EXCHANGE_RATES[targetCurrency]);
-    }
-    function formatPrice(priceUSD, currency) {
-      return `${convertPrice(priceUSD, currency)} ${CURRENCY_SYMBOLS[currency]}`;
-    }
+        <!-- Семена недели (каталог) -->
+        <h2 class="section-title" data-i18n="seeds_week_title">🌱 Семена недели</h2>
+        <div class="grid-cards" id="seedsGrid"></div>
 
-    // ─── АНИМИРОВАННЫЙ ЭЛЕМЕНТ (ЛИСТ) ────────────────────────────
-    function LeafOrb({ size = 160, glow = true }) {
-      return React.createElement("div", { style: { position: "relative", width: size, height: size } },
-        React.createElement("div", { style: {
-          width: size, height: size, borderRadius: "50%",
-          background: `radial-gradient(circle at 30% 30%, ${ACCENT}cc, ${ACCENT}22 50%, ${ACCENT_DARK}00 80%)`,
-          boxShadow: glow ? `0 0 ${size * 0.4}px ${ACCENT}55, 0 ${size * 0.1}px ${size * 0.3}px rgba(0,0,0,0.5)` : "none",
-          display: "flex", alignItems: "center", justifyContent: "center"
-        } },
-          React.createElement("span", { style: { fontSize: size * 0.4, filter: "drop-shadow(0 4px 6px rgba(0,0,0,0.3))" } }, "🌾")
-        ),
-        glow && [0,1,2].map(i => React.createElement("div", { key: i, style: {
-          position: "absolute", top: "50%", left: "50%",
-          width: size, height: size, borderRadius: "50%",
-          border: `1.5px solid ${ACCENT}`,
-          transform: "translate(-50%, -50%)",
-          animation: `pulse-ring 3s ${i}s ease-out infinite`
-        } }))
-      );
-    }
+        <!-- Основные разделы: Новости, Технологии, Обучение, Экология -->
+        <h2 class="section-title" data-i18n="live_news">📰 Новости агро</h2>
+        <div class="grid-cards" id="newsGrid"></div>
 
-    // ─── КАРТОЧКА ТОВАРА (агро-версия) ─────────────────────────
-    function ProductCard({ product, dark, fg, border, navigate, addToCart, language, currency, style = {} }) {
-      const [hover, setHover] = React.useState(false);
-      const t = TRANSLATIONS[language];
-      let name, tagline, category, description, tags;
-      if (language === 'ru') {
-        name = product.name; tagline = product.tagline; category = product.category; description = product.description; tags = product.tags;
-      } else if (language === 'en') {
-        name = product.nameEn; tagline = product.taglineEn; category = product.categoryEn; description = product.descriptionEn; tags = product.tagsEn;
-      } else {
-        name = product.nameUa || product.name; tagline = product.taglineUa || product.tagline; category = product.categoryUa || product.category;
-        description = product.descriptionUa || product.description; tags = product.tagsUa || product.tags;
-      }
-      return React.createElement("div", {
-        onMouseEnter: () => setHover(true), onMouseLeave: () => setHover(false),
-        style: {
-          background: dark ? "#111827" : "#ffffff", border: `1px solid ${hover ? ACCENT : border}`,
-          padding: 28, cursor: "pointer", position: "relative",
-          transform: hover ? "translateY(-8px)" : "none",
-          transition: "all 0.3s cubic-bezier(.2,.9,.4,1.1)",
-          boxShadow: hover ? `0 20px 40px rgba(0,0,0,0.2), 0 0 20px ${ACCENT}22` : "none",
-          borderRadius: 24, ...style
+        <h2 class="section-title" data-i18n="tech_ai">🚜 Технологии / AI в агро</h2>
+        <div class="grid-cards" id="techGrid"></div>
+
+        <div class="row-2col">
+            <div class="card">
+                <i class="fas fa-graduation-cap"></i>
+                <h3 data-i18n="guides_title">Гайды и обучение</h3>
+                <p data-i18n="guides_desc">Точное земледелие, управление рисками, цифровые инструменты.</p>
+                <div class="badge" data-i18n="popular">Популярное</div>
+            </div>
+            <div class="card">
+                <i class="fas fa-leaf"></i>
+                <h3 data-i18n="eco_title">Экология и климат</h3>
+                <p data-i18n="eco_desc">Карбоновые фермы, устойчивое развитие, климатические стратегии.</p>
+                <div class="badge" data-i18n="new">Новое</div>
+            </div>
+        </div>
+
+        <!-- Риски сезона и рекомендации что делать сейчас -->
+        <div class="market-panel" style="background: rgba(30,25,15,0.6);">
+            <h3><i class="fas fa-triangle-exclamation"></i> <span data-i18n="season_risks">Риски сезона</span></h3>
+            <p id="riskText" data-i18n="risk_text">Засуха в южных регионах, рост вредителей озимых. Мониторинг влажности критичен.</p>
+            <div style="margin-top:1rem; border-top:1px solid var(--border-light); padding-top:1rem;">
+                <i class="fas fa-tractor"></i> <strong data-i18n="field_action">Что делать сейчас в поле?</strong> 
+                <span id="fieldAdvice" data-i18n="field_advice">Провести подкормку азотом, обработать фунгицидами при первых признаках.</span>
+            </div>
+        </div>
+    </div>
+</main>
+
+<footer>
+    <div class="container footer-grid">
+        <div>© 2025 AGRONEEW — <span data-i18n="footer_slogan">агро-нервная система будущего</span></div>
+        <div class="footer-links">
+            <a href="#" data-i18n="about">О проекте</a>
+            <a href="#" data-i18n="contacts">Контакты</a>
+            <a href="#" data-i18n="privacy">Политика</a>
+        </div>
+    </div>
+</footer>
+
+<script>
+    // ---------------------- MULTI-LANG (RU/EN) ----------------------
+    const translations = {
+        ru: {
+            hero_title: "Агро нового времени",
+            hero_desc: "Рынки. Семена. Технологии. Всё в одном потоке.",
+            btn_news: "Новости", btn_catalog: "Каталог семян", btn_analytics: "Аналитика",
+            nav_news: "Новости", nav_seeds: "Семена", nav_analytics: "Аналитика", nav_tech: "Технологии",
+            search_placeholder: "Поиск...",
+            agro_index: "Агро индекс дня", live: "LIVE", index_desc: "Интегральный показатель рынка зерновых и масличных",
+            weather_impact: "Погода + влияние на урожай", weather_good: "Влияние: благоприятное, влажность оптимальна",
+            market_today: "Рынок сегодня", crop: "Культура", price: "Цена (USD/т)", change: "Изм.",
+            trends_week: "🌾 Тренды недели:",
+            seeds_week_title: "🌱 Семена недели", live_news: "📰 Новости агро", tech_ai: "🚜 Технологии / AI в агро",
+            guides_title: "Гайды и обучение", guides_desc: "Точное земледелие, управление рисками, цифровые инструменты.",
+            eco_title: "Экология и климат", eco_desc: "Карбоновые фермы, устойчивое развитие, климатические стратегии.",
+            popular: "Популярное", new: "Новое", season_risks: "Риски сезона", risk_text: "Засуха в южных регионах, рост вредителей озимых. Мониторинг влажности критичен.",
+            field_action: "Что делать сейчас в поле?", field_advice: "Провести подкормку азотом, обработать фунгицидами при первых признаках.",
+            footer_slogan: "агро-нервная система будущего", about: "О проекте", contacts: "Контакты", privacy: "Политика",
+            // динамические карточки (контент)
+            seed1: "Пшеница Элита", seed2: "Кукуруза ДКС 3510", seed3: "Подсолнечник НК Неома",
+            seed1_desc: "Урожайность до 85 ц/га, устойчивость к засухе", seed2_desc: "Высокое содержание масла, раннеспелый", seed3_desc: "Иммунитет к заразихе",
+            news1: "Мировые цены на пшеницу выросли на 7%", news2: "Новый дрон-опылитель представлен в РФ", news3: "ЕС утвердил новые эко-стандарты", 
+            tech1: "ИИ прогнозирование урожая", tech2: "Автономные тракторы на базе 5G", tech3: "Спутниковый мониторинг NDVI"
+        },
+        en: {
+            hero_title: "Agriculture of the new era",
+            hero_desc: "Markets. Seeds. Technology. All in one stream.",
+            btn_news: "News", btn_catalog: "Seed catalog", btn_analytics: "Analytics",
+            nav_news: "News", nav_seeds: "Seeds", nav_analytics: "Analytics", nav_tech: "Tech",
+            search_placeholder: "Search...",
+            agro_index: "Agro Index Today", live: "LIVE", index_desc: "Integral grain & oilseed market indicator",
+            weather_impact: "Weather + Crop Impact", weather_good: "Impact: favorable, optimal humidity",
+            market_today: "Market Today", crop: "Crop", price: "Price (USD/t)", change: "Chg",
+            trends_week: "🌾 Weekly trends:",
+            seeds_week_title: "🌱 Seeds of the week", live_news: "📰 Ag News", tech_ai: "🚜 Tech / AI in Ag",
+            guides_title: "Guides & Training", guides_desc: "Precision farming, risk management, digital tools.",
+            eco_title: "Ecology & Climate", eco_desc: "Carbon farming, sustainability, climate strategies.",
+            popular: "Popular", new: "New", season_risks: "Seasonal risks", risk_text: "Drought in southern regions, pests on winter crops. Critical moisture monitoring.",
+            field_action: "What to do in the field now?", field_advice: "Apply nitrogen top dressing, fungicides at first signs.",
+            footer_slogan: "agro-nervous system of the future", about: "About", contacts: "Contacts", privacy: "Privacy",
+            seed1: "Elite Wheat", seed2: "DKC 3510 Corn", seed3: "NK Neoma Sunflower",
+            seed1_desc: "Yield up to 85 c/ha, drought resistance", seed2_desc: "High oil content, early maturing", seed3_desc: "Immunity to broomrape",
+            news1: "Global wheat prices up 7%", news2: "New pollinator drone unveiled in Russia", news3: "EU approves new eco-standards",
+            tech1: "AI yield forecasting", tech2: "Autonomous 5G tractors", tech3: "Satellite NDVI monitoring"
         }
-      },
-        React.createElement("div", { style: { display: "inline-block", marginBottom: 20 } }, React.createElement(LeafOrb, { size: 70, glow: hover })),
-        React.createElement("div", { style: { fontFamily: "'Space Mono', monospace", fontSize: 10, letterSpacing: 2, color: ACCENT, marginBottom: 8 } }, category),
-        React.createElement("h3", { onClick: () => navigate("product", product), style: { fontSize: 22, fontWeight: 600, marginBottom: 8, letterSpacing: -0.3, color: fg } }, name),
-        React.createElement("p", { style: { fontSize: 13, color: dark ? "#9ca3af" : "#4b5563", lineHeight: 1.5, marginBottom: 24 } }, tagline),
-        React.createElement("div", { style: { display: "flex", justifyContent: "space-between", alignItems: "center" } },
-          React.createElement("span", { style: { fontSize: 20, fontWeight: 600, color: ACCENT } }, formatPrice(product.priceUSD, currency)),
-          React.createElement("div", { style: { display: "flex", gap: 8 } },
-            React.createElement("button", { onClick: () => navigate("product", product), style: { padding: "6px 14px", background: "transparent", border: `1px solid ${border}`, color: fg, fontSize: 10, letterSpacing: 1, borderRadius: 40, cursor: "pointer" } }, language === 'ru' ? "ДЕТАЛИ" : (language === 'en' ? "DETAILS" : "ДЕТАЛІ")),
-            React.createElement("button", { onClick: () => addToCart(product), style: { padding: "6px 14px", background: ACCENT, border: "none", color: "#000", fontSize: 10, fontWeight: 700, borderRadius: 40, cursor: "pointer" } }, language === 'ru' ? "ЗАКАЗАТЬ" : (language === 'en' ? "ORDER" : "ЗАМОВИТИ"))
-          )
-        )
-      );
-    }
+    };
+    let currentLang = 'ru';
 
-    // ─── ГЛАВНАЯ СТРАНИЦА (с добавленным блоком "О нас") ────────
-    function HomePage({ dark, fg, border, products, navigate, addToCart, language, currency }) {
-      const [scrollY, setScrollY] = React.useState(0);
-      React.useEffect(() => { const h = () => setScrollY(window.scrollY); window.addEventListener("scroll", h); return () => window.removeEventListener("scroll", h); }, []);
-      const muted = dark ? "#9ca3af" : "#4b5563";
-      const t = TRANSLATIONS[language];
-      return React.createElement("div", null,
-        React.createElement("section", { style: { minHeight: "100vh", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", position: "relative", overflow: "hidden", paddingTop: 64 } },
-          React.createElement("div", { style: { position: "absolute", inset: 0, backgroundImage: `radial-gradient(circle at 20% 40%, ${ACCENT}11 0%, transparent 60%)`, transform: `translateY(${scrollY * 0.2}px)` } }),
-          React.createElement("div", { style: { animation: "float 6s ease-in-out infinite", marginBottom: 40 } }, React.createElement(LeafOrb, { size: 200 })),
-          React.createElement("div", { style: { textAlign: "center", animation: "fadeUp 0.8s ease both", maxWidth: "90%" } },
-            React.createElement("p", { style: { fontFamily: "'Space Mono', monospace", fontSize: 11, letterSpacing: 4, color: ACCENT, marginBottom: 16 } }, t.heroTag),
-            React.createElement("h1", { style: { fontSize: "clamp(40px, 9vw, 80px)", fontWeight: 700, letterSpacing: -2, lineHeight: 1.1, marginBottom: 24, color: fg } },
-              t.heroTitle1, React.createElement("br"), React.createElement("span", { style: { color: ACCENT } }, t.heroTitleAccent), " ", t.heroTitle2
-            ),
-            React.createElement("p", { style: { fontSize: 18, color: muted, maxWidth: 520, margin: "0 auto 40px", lineHeight: 1.6 } }, t.heroDesc),
-            React.createElement("div", { style: { display: "flex", gap: 16, justifyContent: "center", flexWrap: "wrap" } },
-              React.createElement("button", { onClick: () => navigate("catalog"), style: { padding: "14px 32px", background: ACCENT, color: "#000", border: "none", fontSize: 13, fontWeight: 700, borderRadius: 60, cursor: "pointer" } }, t.btnCatalog),
-              React.createElement("a", { href: "https://t.me/agrocan", target: "_blank", style: { padding: "14px 32px", background: "transparent", color: fg, border: `1px solid ${border}`, fontSize: 13, borderRadius: 60, cursor: "pointer", textDecoration: "none", display: "inline-block" } }, t.telegramButton)
-            )
-          ),
-          React.createElement("div", { style: { position: "absolute", bottom: 30, left: "50%", transform: "translateX(-50%)", opacity: 0.4, textAlign: "center" } },
-            React.createElement("span", { style: { fontSize: 9, letterSpacing: 3, fontFamily: "'Space Mono', monospace" } }, "SCROLL")
-          )
-        ),
-        React.createElement("section", { style: { padding: "60px 24px", borderTop: `1px solid ${border}`, display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 32, textAlign: "center" } },
-          t.stats.map(([n, l]) => React.createElement("div", { key: l }, React.createElement("div", { style: { fontSize: 42, fontWeight: 600, color: ACCENT } }, n), React.createElement("div", { style: { fontSize: 12, color: muted, letterSpacing: 1 } }, l)))
-        ),
-        React.createElement("section", { style: { padding: "60px 24px" } },
-          React.createElement("div", { style: { display: "flex", justifyContent: "space-between", alignItems: "flex-end", flexWrap: "wrap", marginBottom: 40, gap: 16 } },
-            React.createElement("div", null,
-              React.createElement("p", { style: { fontFamily: "'Space Mono', monospace", fontSize: 10, letterSpacing: 3, color: ACCENT } }, t.featuredTitle),
-              React.createElement("h2", { style: { fontSize: "clamp(28px, 5vw, 42px)", fontWeight: 500, color: fg } }, t.featuredSubtitle)
-            ),
-            React.createElement("span", { onClick: () => navigate("catalog"), style: { fontSize: 12, cursor: "pointer", color: muted, borderBottom: `1px solid ${muted}` } }, t.featuredLink)
-          ),
-          React.createElement("div", { style: { display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: 24 } },
-            products.slice(0, 3).map(p => React.createElement(ProductCard, { key: p.id, product: p, dark, fg, border, navigate, addToCart, language, currency }))
-          )
-        ),
-        // НОВЫЙ БЛОК "О НАС"
-        React.createElement("section", { style: { padding: "80px 24px", background: dark ? "#0f172a" : "#f1f5f9", borderTop: `1px solid ${border}`, borderBottom: `1px solid ${border}` } },
-          React.createElement("div", { style: { maxWidth: 800, margin: "0 auto", textAlign: "center" } },
-            React.createElement("h2", { style: { fontSize: "clamp(28px, 5vw, 42px)", fontWeight: 500, marginBottom: 24, color: fg } }, t.aboutTitle),
-            React.createElement("p", { style: { fontSize: 16, lineHeight: 1.6, color: muted } }, t.aboutSection)
-          )
-        ),
-        React.createElement("section", { style: { padding: "60px 24px", textAlign: "center" } },
-          React.createElement("button", { onClick: () => navigate("catalog"), style: { padding: "14px 32px", background: ACCENT, border: "none", borderRadius: 60, fontWeight: 600, cursor: "pointer" } }, t.btnToCatalog)
-        )
-      );
-    }
-
-    // ─── КАТАЛОГ (без изменений, но категории адаптированы) ────
-    function CatalogPage({ dark, fg, border, products, navigate, addToCart, filter, setFilter, search, setSearch, language, currency }) {
-      const t = TRANSLATIONS[language];
-      let categories;
-      if (language === 'ru') categories = ["Все", "Промышленное волокно", "Масличная конопля", "Фотопериодические сорта", "Исследовательские линии"];
-      else if (language === 'en') categories = ["All", "Industrial Fiber Hemp", "Oilseed Hemp", "Photoperiodic Varieties", "Research Genetics Lines"];
-      else categories = ["Всі", "Промислове волокно", "Олійна конопля", "Фотоперіодичні сорти", "Дослідницькі лінії"];
-      const muted = dark ? "#9ca3af" : "#4b5563";
-      return React.createElement("div", { style: { padding: "100px 24px 80px", minHeight: "100vh" } },
-        React.createElement("div", { style: { marginBottom: 48, animation: "fadeUp 0.6s ease both" } },
-          React.createElement("p", { style: { fontFamily: "'Space Mono', monospace", fontSize: 10, letterSpacing: 4, color: ACCENT } }, t.catalogHeader),
-          React.createElement("h1", { style: { fontSize: "clamp(36px, 7vw, 56px)", fontWeight: 600, marginBottom: 24, color: fg } }, t.catalogTitle),
-          React.createElement("input", { type: "text", placeholder: t.searchPlaceholder, value: search, onChange: e => setSearch(e.target.value), style: { width: "100%", maxWidth: 380, padding: "12px 20px", background: "transparent", border: `1px solid ${border}`, color: fg, borderRadius: 60, marginBottom: 24 } }),
-          React.createElement("div", { style: { display: "flex", gap: 10, flexWrap: "wrap", marginBottom: 32 } },
-            categories.map(c => React.createElement("button", { key: c, onClick: () => setFilter(c), style: { padding: "6px 18px", borderRadius: 60, background: filter === c ? ACCENT : "transparent", border: `1px solid ${filter === c ? ACCENT : border}`, color: filter === c ? "#000" : fg, fontSize: 12, cursor: "pointer" } }, c))
-          )
-        ),
-        products.length === 0 ? React.createElement("div", { style: { textAlign: "center", padding: "80px" } }, t.noResults) :
-          React.createElement("div", { style: { display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: 24 } }, 
-            products.map(p => React.createElement(ProductCard, { key: p.id, product: p, dark, fg, border, navigate, addToCart, language, currency })))
-      );
-    }
-
-    // ─── СТРАНИЦА ТОВАРА (адаптирована под агро) ────────────────
-    function ProductPage({ product, dark, fg, border, navigate, addToCart, language, currency }) {
-      const [qty, setQty] = React.useState(1);
-      const muted = dark ? "#9ca3af" : "#4b5563";
-      const t = TRANSLATIONS[language];
-      let name, description, category, tags, specsLocal;
-      if (language === 'ru') {
-        name = product.name; description = product.description; category = product.category; tags = product.tags;
-        specsLocal = product.specs;
-      } else if (language === 'en') {
-        name = product.nameEn; description = product.descriptionEn; category = product.categoryEn; tags = product.tagsEn;
-        specsLocal = product.specs;
-      } else {
-        name = product.nameUa || product.name; description = product.descriptionUa || product.description;
-        category = product.categoryUa || product.category; tags = product.tagsUa || product.tags;
-        specsLocal = product.specs;
-      }
-      const specEntries = Object.entries(specsLocal);
-      const specLabels = {
-        height: "Height", fiber: "Fiber %", cycle: "Cycle", use: "Use", oil: "Oil %", omega: "Omega ratio", protein: "Protein %", thc: "THC", cbd: "CBD", seedYield: "Seed yield"
-      };
-      return React.createElement("div", { style: { paddingTop: 70, minHeight: "100vh" } },
-        React.createElement("div", { style: { padding: "20px 24px" }, onClick: () => navigate("catalog") }, React.createElement("span", { style: { cursor: "pointer", color: ACCENT, fontFamily: "'Space Mono', monospace", fontSize: 12 } }, t.productBack)),
-        React.createElement("div", { style: { display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: 40, padding: "0 24px 80px" } },
-          React.createElement("div", { style: { display: "flex", justifyContent: "center" } }, React.createElement(LeafOrb, { size: 240, glow: true })),
-          React.createElement("div", null,
-            React.createElement("div", { style: { fontFamily: "'Space Mono', monospace", fontSize: 12, color: ACCENT } }, category),
-            React.createElement("h1", { style: { fontSize: "clamp(32px, 6vw, 48px)", margin: "12px 0 8px", color: fg } }, name),
-            React.createElement("p", { style: { fontSize: 15, color: muted, lineHeight: 1.6, marginBottom: 28 } }, description),
-            React.createElement("div", { style: { display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 28 } },
-              specEntries.map(([k,v]) => React.createElement("div", { key: k, style: { borderBottom: `1px solid ${border}`, padding: "8px 0" } }, 
-                React.createElement("div", { style: { fontSize: 10, color: muted } }, (specLabels[k] || k).toUpperCase()), 
-                React.createElement("div", { style: { fontWeight: 500, color: fg } }, v)))
-            ),
-            React.createElement("div", { style: { display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 28 } }, 
-              tags.map(t => React.createElement("span", { key: t, style: { padding: "4px 12px", background: dark ? "#1e293b" : "#e2e8f0", borderRadius: 40, fontSize: 11 } }, t))),
-            React.createElement("div", { style: { display: "flex", alignItems: "center", gap: 24, marginBottom: 28, flexWrap: "wrap" } },
-              React.createElement("span", { style: { fontSize: 36, fontWeight: 600, color: ACCENT } }, formatPrice(product.priceUSD * qty, currency)),
-              React.createElement("div", { style: { display: "flex", border: `1px solid ${border}`, borderRadius: 60 } },
-                React.createElement("button", { onClick: () => setQty(Math.max(1, qty-1)), style: { padding: "8px 18px", background: "transparent", border: "none", fontSize: 20, cursor: "pointer", color: fg } }, "−"),
-                React.createElement("span", { style: { padding: "8px 16px", minWidth: 50, textAlign: "center" } }, qty),
-                React.createElement("button", { onClick: () => setQty(qty+1), style: { padding: "8px 18px", background: "transparent", border: "none", fontSize: 20, cursor: "pointer", color: fg } }, "+")
-              )
-            ),
-            React.createElement("button", { onClick: () => { for(let i=0;i<qty;i++) addToCart(product); }, style: { width: "100%", padding: 16, background: ACCENT, border: "none", borderRadius: 60, fontWeight: 700, fontSize: 14, cursor: "pointer" } }, 
-              `${language === 'ru' ? "Заказать" : (language === 'en' ? "Order" : "Замовити")} — ${formatPrice(product.priceUSD * qty, currency)}`)
-          )
-        ),
-        React.createElement("div", { style: { margin: "0 24px 60px", padding: 32, border: `1px solid ${border}`, borderRadius: 32, background: dark ? "#0f172a" : "#f8fafc" } },
-          React.createElement("h3", { style: { fontFamily: "'Space Mono', monospace", color: ACCENT, marginBottom: 20 } }, t.geneticPassport),
-          React.createElement("div", { style: { display: "grid", gridTemplateColumns: "repeat(21, minmax(4px, 1fr))", gap: 1, maxWidth: 300, margin: "0 auto 20px" } }, 
-            Array(441).fill(0).map((_,i) => React.createElement("div", { key: i, style: { aspectRatio: "1/1", background: Math.random() > 0.7 ? "#000" : "#fff" } }))),
-          React.createElement("div", { style: { textAlign: "center", fontFamily: "'Space Mono', monospace", fontSize: 14, letterSpacing: 1 } }, product.id)
-        )
-      );
-    }
-
-    // ─── КОРЗИНА И ОФОРМЛЕНИЕ (без изменений, но с новой валютой) ──
-    function CartPage({ cart, dark, fg, border, navigate, removeFromCart, updateQty, cartTotalUSD, language, currency }) {
-      const t = TRANSLATIONS[language];
-      const muted = dark ? "#9ca3af" : "#4b5563";
-      if (cart.length === 0) return React.createElement("div", { style: { padding: "120px 24px", textAlign: "center" } },
-        React.createElement("div", { style: { fontSize: 64, marginBottom: 20, opacity: 0.3 } }, "🛒"),
-        React.createElement("h2", { style: { color: fg } }, t.emptyCart), 
-        React.createElement("button", { onClick: () => navigate("catalog"), style: { marginTop: 24, background: ACCENT, border: "none", padding: "12px 28px", borderRadius: 40, cursor: "pointer" } }, t.goToCatalog)
-      );
-      return React.createElement("div", { style: { padding: "100px 24px 80px", minHeight: "100vh" } },
-        React.createElement("h1", { style: { fontSize: "clamp(32px, 6vw, 48px)", marginBottom: 40, color: fg } }, t.cartTitle),
-        React.createElement("div", { style: { display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 16, marginBottom: 40 } },
-          cart.map(item => {
-            let name = item.name;
-            let category = item.category;
-            if (language === 'en') { name = item.nameEn; category = item.categoryEn; }
-            if (language === 'ua') { name = item.nameUa || item.name; category = item.categoryUa || item.category; }
-            return React.createElement("div", { key: item.id, style: { display: "flex", justifyContent: "space-between", alignItems: "center", padding: 16, border: `1px solid ${border}`, borderRadius: 24, background: dark ? "#111827" : "#fff", flexWrap: "wrap", gap: 12 } },
-              React.createElement("div", null, React.createElement("h3", { style: { fontSize: 18 } }, name), React.createElement("div", { style: { fontSize: 12, color: muted } }, category)),
-              React.createElement("div", { style: { display: "flex", alignItems: "center", gap: 12 } },
-                React.createElement("button", { onClick: () => updateQty(item.id, -1), style: { background: "transparent", border: `1px solid ${border}`, width: 32, borderRadius: 40, cursor: "pointer" } }, "−"),
-                React.createElement("span", null, item.qty),
-                React.createElement("button", { onClick: () => updateQty(item.id, 1), style: { background: "transparent", border: `1px solid ${border}`, width: 32, borderRadius: 40, cursor: "pointer" } }, "+")
-              ),
-              React.createElement("span", { style: { fontWeight: 600, color: ACCENT } }, formatPrice(item.priceUSD * item.qty, currency)),
-              React.createElement("button", { onClick: () => removeFromCart(item.id), style: { background: "none", border: "none", fontSize: 18, cursor: "pointer", opacity: 0.6 } }, "✕")
-            );
-          })
-        ),
-        React.createElement("div", { style: { textAlign: "right", borderTop: `1px solid ${border}`, paddingTop: 24 } },
-          React.createElement("h3", { style: { fontSize: 28, color: fg } }, `${t.total} ${formatPrice(cartTotalUSD, currency)}`),
-          React.createElement("button", { onClick: () => navigate("checkout"), style: { marginTop: 20, padding: "12px 32px", background: ACCENT, border: "none", borderRadius: 60, fontWeight: 600, cursor: "pointer" } }, t.checkout)
-        )
-      );
-    }
-
-    function CheckoutPage({ dark, fg, border, navigate, cartTotalUSD, language, currency }) {
-      const [form, setForm] = React.useState({ name: "", phone: "", address: "" });
-      const [done, setDone] = React.useState(false);
-      const t = TRANSLATIONS[language];
-      if (done) return React.createElement("div", { style: { height: "100vh", display: "flex", justifyContent: "center", alignItems: "center", flexDirection: "column", textAlign: "center", padding: 24 } },
-        React.createElement("div", { style: { fontSize: 64 } }, "✅"),
-        React.createElement("h2", { style: { color: fg, marginTop: 16 } }, t.orderSuccess),
-        React.createElement("p", { style: { color: "#9ca3af" } }, t.orderDesc),
-        React.createElement("button", { onClick: () => navigate("home"), style: { marginTop: 32, background: ACCENT, padding: "12px 32px", borderRadius: 60, border: "none", cursor: "pointer" } }, t.backHome)
-      );
-      return React.createElement("div", { style: { padding: "100px 24px 80px", maxWidth: 600, margin: "0 auto" } },
-        React.createElement("h1", { style: { fontSize: "clamp(32px, 6vw, 44px)", marginBottom: 32, color: fg } }, t.checkoutTitle),
-        React.createElement("div", { style: { display: "flex", flexDirection: "column", gap: 20 } },
-          React.createElement("input", { type: "text", placeholder: t.namePlaceholder, value: form.name, onChange: e => setForm({...form, name: e.target.value}), style: { padding: "14px 20px", background: "transparent", border: `1px solid ${border}`, borderRadius: 60, color: fg, fontSize: 14 } }),
-          React.createElement("input", { type: "text", placeholder: t.phonePlaceholder, value: form.phone, onChange: e => setForm({...form, phone: e.target.value}), style: { padding: "14px 20px", background: "transparent", border: `1px solid ${border}`, borderRadius: 60, color: fg, fontSize: 14 } }),
-          React.createElement("input", { type: "text", placeholder: t.addressPlaceholder, value: form.address, onChange: e => setForm({...form, address: e.target.value}), style: { padding: "14px 20px", background: "transparent", border: `1px solid ${border}`, borderRadius: 60, color: fg, fontSize: 14 } }),
-          React.createElement("div", { style: { padding: 20, borderRadius: 24, border: `1px solid ${border}`, textAlign: "center" } }, 
-            React.createElement("span", { style: { fontSize: 20, fontWeight: 600, color: ACCENT } }, `${t.total} ${formatPrice(cartTotalUSD, currency)}`)),
-          React.createElement("button", { onClick: () => { if(form.name && form.phone) setDone(true); }, style: { padding: "14px", background: ACCENT, border: "none", borderRadius: 60, fontWeight: 700, cursor: "pointer" } }, t.orderConfirm)
-        )
-      );
-    }
-
-    // ─── ROOT ────────────────────────────────────────────────────
-    function AgroneewApp() {
-      const [page, setPage] = React.useState("home");
-      const [selected, setSelected] = React.useState(null);
-      const [cart, setCart] = React.useState([]);
-      const [filter, setFilter] = React.useState("Все");
-      const [search, setSearch] = React.useState("");
-      const [dark, setDark] = React.useState(true);
-      const [toast, setToast] = React.useState("");
-      const [language, setLanguage] = React.useState("ru");
-      const [currency, setCurrency] = React.useState(detectCurrencyByLocale());
-
-      const showToast = msg => { setToast(msg); setTimeout(() => setToast(""), 2500); };
-      const addToCart = product => {
-        setCart(prev => { const ex = prev.find(i => i.id === product.id); return ex ? prev.map(i => i.id === product.id ? {...i, qty: i.qty+1} : i) : [...prev, {...product, qty: 1}]; });
-        let name = product.name;
-        if (language === 'en') name = product.nameEn;
-        if (language === 'ua') name = product.nameUa || product.name;
-        showToast(`${name} добавлен в корзину`);
-      };
-      const removeFromCart = id => setCart(prev => prev.filter(i => i.id !== id));
-      const updateQty = (id, d) => setCart(prev => prev.map(i => i.id === id ? {...i, qty: Math.max(1, i.qty + d)} : i));
-      const cartTotalUSD = cart.reduce((s,i) => s + i.priceUSD * i.qty, 0);
-      const cartCount = cart.reduce((s,i) => s + i.qty, 0);
-      const navigate = (p, product = null) => { setSelected(product); setPage(p); window.scrollTo(0,0); };
-
-      const filtered = React.useMemo(() => {
-        let catFilter = filter;
-        const mapRuToEn = { "Все": "All", "Промышленное волокно": "Industrial Fiber Hemp", "Масличная конопля": "Oilseed Hemp", "Фотопериодические сорта": "Photoperiodic Varieties", "Исследовательские линии": "Research Genetics Lines" };
-        const mapRuToUa = { "Все": "Всі", "Промышленное волокно": "Промислове волокно", "Масличная конопля": "Олійна конопля", "Фотопериодические сорта": "Фотоперіодичні сорти", "Исследовательские линии": "Дослідницькі лінії" };
-        if (language === 'en') catFilter = mapRuToEn[filter] || filter;
-        if (language === 'ua') catFilter = mapRuToUa[filter] || filter;
-        return PRODUCTS.filter(p => {
-          let categoryMatch = false;
-          if (language === 'ru') categoryMatch = (filter === "Все" || p.category === catFilter);
-          else if (language === 'en') categoryMatch = (filter === "All" || p.categoryEn === catFilter);
-          else categoryMatch = (filter === "Всі" || (p.categoryUa || p.category) === catFilter);
-          const nameField = language === 'ru' ? p.name : (language === 'en' ? p.nameEn : (p.nameUa || p.name));
-          const tagsField = language === 'ru' ? p.tags : (language === 'en' ? p.tagsEn : (p.tagsUa || p.tags));
-          const searchMatch = nameField.toLowerCase().includes(search.toLowerCase()) || tagsField.some(t => t.toLowerCase().includes(search.toLowerCase()));
-          return categoryMatch && searchMatch;
+    function setLanguage(lang) {
+        currentLang = lang;
+        document.querySelectorAll('[data-i18n]').forEach(el => {
+            const key = el.getAttribute('data-i18n');
+            if (translations[lang][key]) el.innerText = translations[lang][key];
         });
-      }, [filter, search, language]);
-
-      const bg = dark ? BG_DARK : BG_LIGHT;
-      const fg = dark ? FG_DARK : FG_LIGHT;
-      const border = dark ? "#1e293b" : "#cbd5e1";
-      const t = TRANSLATIONS[language];
-
-      return React.createElement("div", { style: { background: bg, color: fg, fontFamily: "'Inter', sans-serif", minHeight: "100vh", transition: "all 0.3s", position: "relative" } },
-        // Фоновая анимация (organic data grid)
-        React.createElement("div", { style: { position: "fixed", inset: 0, pointerEvents: "none", zIndex: 0, opacity: 0.03, backgroundImage: `linear-gradient(${ACCENT} 1px, transparent 1px), linear-gradient(90deg, ${ACCENT} 1px, transparent 1px)`, backgroundSize: "40px 40px", animation: "gridMove 20s linear infinite" } }),
-        React.createElement("div", { style: { position: "relative", zIndex: 1 } },
-          React.createElement("nav", { style: { position: "fixed", top: 0, left: 0, right: 0, zIndex: 100, display: "flex", justifyContent: "space-between", alignItems: "center", padding: "0 20px", height: 60, background: dark ? "rgba(10,12,18,0.9)" : "rgba(248,250,252,0.9)", backdropFilter: "blur(12px)", borderBottom: `1px solid ${border}` } },
-            React.createElement("span", { onClick: () => navigate("home"), style: { fontFamily: "'Space Mono', monospace", fontSize: 16, fontWeight: 700, cursor: "pointer" } }, "AGRO", React.createElement("span", { style: { color: ACCENT } }, "NEW")),
-            React.createElement("div", { style: { display: "flex", gap: 12, alignItems: "center", flexWrap: "wrap" } },
-              React.createElement("select", { value: language, onChange: e => setLanguage(e.target.value), style: { background: "transparent", border: `1px solid ${border}`, borderRadius: 40, padding: "4px 8px", fontSize: 10, cursor: "pointer", color: fg } },
-                React.createElement("option", { value: "ru" }, "🇷🇺 RU"),
-                React.createElement("option", { value: "en" }, "🇬🇧 EN"),
-                React.createElement("option", { value: "ua" }, "🇺🇦 UA")
-              ),
-              React.createElement("select", { value: currency, onChange: e => setCurrency(e.target.value), style: { background: "transparent", border: `1px solid ${border}`, borderRadius: 40, padding: "4px 8px", fontSize: 10, cursor: "pointer", color: fg } },
-                React.createElement("option", { value: "USD" }, t.currencyUSD),
-                React.createElement("option", { value: "EUR" }, t.currencyEUR),
-                React.createElement("option", { value: "UAH" }, t.currencyUAH)
-              ),
-              React.createElement("span", { onClick: () => navigate("catalog"), style: { fontSize: 12, cursor: "pointer" } }, t.navCatalog),
-              React.createElement("span", { onClick: () => navigate("cart"), style: { position: "relative", cursor: "pointer" } }, "🛒", cartCount > 0 && React.createElement("span", { style: { position: "absolute", top: -8, right: -12, background: ACCENT, color: "#000", borderRadius: "50%", width: 16, height: 16, fontSize: 10, display: "flex", alignItems: "center", justifyContent: "center" } }, cartCount)),
-              React.createElement("button", { onClick: () => setDark(!dark), style: { background: "transparent", border: `1px solid ${border}`, borderRadius: 60, padding: "4px 12px", fontSize: 10, cursor: "pointer", color: fg } }, dark ? t.themeDark : t.themeLight)
-            )
-          ),
-          toast && React.createElement("div", { style: { position: "fixed", bottom: 20, right: 20, background: ACCENT, color: "#000", padding: "10px 20px", borderRadius: 60, fontSize: 12, fontWeight: 600, zIndex: 200, animation: "toast-in 0.2s ease" } }, toast),
-          page === "home" && React.createElement(HomePage, { dark, fg, border, products: PRODUCTS, navigate, addToCart, language, currency }),
-          page === "catalog" && React.createElement(CatalogPage, { dark, fg, border, products: filtered, navigate, addToCart, filter, setFilter, search, setSearch, language, currency }),
-          page === "product" && selected && React.createElement(ProductPage, { dark, fg, border, product: selected, navigate, addToCart, language, currency }),
-          page === "cart" && React.createElement(CartPage, { dark, fg, border, cart, navigate, removeFromCart, updateQty, cartTotalUSD, language, currency }),
-          page === "checkout" && React.createElement(CheckoutPage, { dark, fg, border, navigate, cartTotalUSD, language, currency }),
-          React.createElement("footer", { style: { padding: "32px 20px", textAlign: "center", borderTop: `1px solid ${border}`, fontSize: 11, color: dark ? "#6b7280" : "#4b5563" } },
-            React.createElement("div", null, t.footer),
-            React.createElement("div", { style: { marginTop: 12, fontSize: 10, letterSpacing: 0.5, opacity: 0.7 } }, t.legal1),
-            React.createElement("div", { style: { fontSize: 10, opacity: 0.7 } }, t.legal2)
-          )
-        )
-      );
+        document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+            const key = el.getAttribute('data-i18n-placeholder');
+            if (translations[lang][key]) el.placeholder = translations[lang][key];
+        });
+        // обновляем динамические контенты (seed cards, новости, технологии)
+        renderSeedsCards();
+        renderNewsCards();
+        renderTechCards();
+        updateTrendsText();
+        updateRiskAndAdvice();
+        document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
+        document.querySelector(`.lang-btn[data-lang="${lang}"]`).classList.add('active');
     }
 
-    const root = ReactDOM.createRoot(document.getElementById('root'));
-    root.render(React.createElement(AgroneewApp));
-  </script>
+    // имитация живых данных рынка, агроиндекса, бегущей строки
+    let marketData = [
+        { name: "Пшеница (3 класс)", price: 245.5, change: 2.1, nameEn: "Wheat (class 3)" },
+        { name: "Кукуруза", price: 218.3, change: -0.7, nameEn: "Corn" },
+        { name: "Подсолнечник", price: 512.0, change: 1.4, nameEn: "Sunflower" },
+        { name: "Ячмень", price: 198.2, change: -0.2, nameEn: "Barley" }
+    ];
+    function updateMarketTable() {
+        const tbody = document.getElementById('marketTbody');
+        tbody.innerHTML = '';
+        marketData.forEach(item => {
+            const row = tbody.insertRow();
+            const cropName = currentLang === 'ru' ? item.name : (item.nameEn || item.name);
+            row.insertCell(0).innerText = cropName;
+            row.insertCell(1).innerText = item.price.toFixed(1);
+            const changeCell = row.insertCell(2);
+            changeCell.innerText = (item.change > 0 ? `+${item.change}` : `${item.change}`) + '%';
+            changeCell.className = item.change >= 0 ? 'positive' : 'negative';
+        });
+        document.getElementById('lastUpdate').innerText = new Date().toLocaleTimeString();
+    }
+    function randomizeMarket() {
+        marketData.forEach(item => {
+            let delta = (Math.random() - 0.5) * 1.2;
+            item.price = Math.max(80, item.price + delta);
+            item.change = parseFloat(delta.toFixed(1));
+        });
+        updateMarketTable();
+        updateAgroIndex();
+        updateTickerText();
+    }
+    let agroValue = 1245.67;
+    function updateAgroIndex() {
+        let deltaIdx = (Math.random() - 0.5) * 12;
+        agroValue = Math.max(800, agroValue + deltaIdx);
+        document.getElementById('agroIndexValue').innerText = agroValue.toFixed(1);
+        let changePercent = (deltaIdx / (agroValue - deltaIdx)) * 100;
+        let changeElem = document.getElementById('agroChange');
+        if (changePercent >= 0) {
+            changeElem.innerHTML = `+${changePercent.toFixed(2)}% ▲`;
+            changeElem.className = 'positive';
+        } else {
+            changeElem.innerHTML = `${changePercent.toFixed(2)}% ▼`;
+            changeElem.className = 'negative';
+        }
+    }
+    // бегущая строка
+    function updateTickerText() {
+        const tickerDiv = document.getElementById('tickerText');
+        let pricesStr = marketData.map(c => `${currentLang === 'ru' ? c.name : (c.nameEn || c.name)}: ${c.price.toFixed(1)}$`).join('  |  ');
+        let newsFlash = currentLang === 'ru' ? '🌾 Пшеница обновила максимумы  •  Новый грант на дроны  •  Уборочная стартует' : '🌾 Wheat hits new highs  •  New drone grants  •  Harvest begins';
+        tickerDiv.innerHTML = `<span><i class="fas fa-chart-line"></i> ${pricesStr}</span> <span><i class="fas fa-newspaper"></i> ${newsFlash}</span> <span><i class="fas fa-chart-line"></i> ${pricesStr}</span>`;
+    }
+    function updateTrendsText() {
+        const trends = currentLang === 'ru' ? 'Рост спроса на сою, дефицит удобрений, цифровизация ферм' : 'Soy demand up, fertilizer shortage, farm digitalization';
+        document.getElementById('trendsList').innerText = trends;
+    }
+    function updateRiskAndAdvice() {
+        if(currentLang === 'ru') {
+            document.getElementById('riskText').innerText = 'Засуха в южных регионах, рост вредителей озимых. Мониторинг влажности критичен.';
+            document.getElementById('fieldAdvice').innerText = 'Провести подкормку азотом, обработать фунгицидами при первых признаках.';
+        } else {
+            document.getElementById('riskText').innerText = 'Drought in southern regions, pests on winter crops. Critical moisture monitoring.';
+            document.getElementById('fieldAdvice').innerText = 'Apply nitrogen top dressing, fungicides at first signs.';
+        }
+    }
+    // Рендер карточек семян, новостей, технологий с учетом языка
+    function renderSeedsCards() {
+        const seedsContainer = document.getElementById('seedsGrid');
+        const seeds = [
+            { nameKey: 'seed1', descKey: 'seed1_desc', icon: 'fas fa-seedling' },
+            { nameKey: 'seed2', descKey: 'seed2_desc', icon: 'fas fa-tractor' },
+            { nameKey: 'seed3', descKey: 'seed3_desc', icon: 'fas fa-sun-plant-wilt' }
+        ];
+        seedsContainer.innerHTML = seeds.map(s => `
+            <div class="card">
+                <i class="${s.icon}"></i>
+                <h3>${translations[currentLang][s.nameKey]}</h3>
+                <p>${translations[currentLang][s.descKey]}</p>
+                <div class="badge">${currentLang === 'ru' ? 'Новинка' : 'New'}</div>
+            </div>
+        `).join('');
+    }
+    function renderNewsCards() {
+        const newsContainer = document.getElementById('newsGrid');
+        const newsArr = ['news1', 'news2', 'news3'];
+        newsContainer.innerHTML = newsArr.map(k => `
+            <div class="card">
+                <i class="fas fa-newspaper"></i>
+                <h3>${translations[currentLang][k]}</h3>
+                <p>${currentLang === 'ru' ? 'Обновлено 2 часа назад • Аналитика' : 'Updated 2h ago • Analytics'}</p>
+                <div class="badge">${currentLang === 'ru' ? 'Читать' : 'Read'}</div>
+            </div>
+        `).join('');
+    }
+    function renderTechCards() {
+        const techContainer = document.getElementById('techGrid');
+        const techArr = ['tech1', 'tech2', 'tech3'];
+        techContainer.innerHTML = techArr.map(k => `
+            <div class="card">
+                <i class="fas fa-microchip"></i>
+                <h3>${translations[currentLang][k]}</h3>
+                <p>${currentLang === 'ru' ? 'Инновации для точного земледелия' : 'Innovations for precision farming'}</p>
+                <div class="badge">${currentLang === 'ru' ? 'Актуально' : 'Trending'}</div>
+            </div>
+        `).join('');
+    }
+    // автоопределение языка
+    function detectLanguage() {
+        const browserLang = navigator.language || navigator.userLanguage;
+        if (browserLang.startsWith('en')) return 'en';
+        return 'ru';
+    }
+    // имитация погоды
+    function mockWeather() {
+        const temp = Math.floor(18 + Math.random() * 10);
+        document.getElementById('weatherTemp').innerHTML = `+${temp}°C`;
+        const conditions = currentLang === 'ru' ? ['Солнечно', 'Переменная облачность', 'Легкий дождь'] : ['Sunny', 'Partly cloudy', 'Light rain'];
+        const desc = conditions[Math.floor(Math.random()*3)];
+        document.getElementById('weatherDesc').innerHTML = desc;
+    }
+    // запуск live-обновлений
+    setInterval(() => {
+        randomizeMarket();
+        mockWeather();
+        updateTickerText();
+        updateAgroIndex();
+    }, 10000);
+    
+    // инициализация
+    function init() {
+        const detected = detectLanguage();
+        setLanguage(detected);
+        updateMarketTable();
+        updateAgroIndex();
+        updateTickerText();
+        updateTrendsText();
+        mockWeather();
+        renderSeedsCards();
+        renderNewsCards();
+        renderTechCards();
+        document.querySelectorAll('.lang-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const lang = btn.getAttribute('data-lang');
+                setLanguage(lang);
+                updateMarketTable(); 
+                updateTrendsText();
+                updateRiskAndAdvice();
+                mockWeather();
+                updateTickerText();
+            });
+        });
+    }
+    init();
+</script>
 </body>
 </html>
