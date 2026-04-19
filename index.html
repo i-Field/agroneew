@@ -1,712 +1,460 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="uk">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>AGRONEEW — Агро нового времени</title>
-    <!-- Favicon (data:image/svg+xml) -->
+    <title>AGRONEEW | Агро нового часу | Генетика, ринки, технології</title>
+    <!-- Favicon з репозиторію (raw) -->
+    <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/i-Field/agroneew/main/favicon.png">
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='45' fill='%231a2e1a' stroke='%23D4AF37' stroke-width='2'/%3E%3Cpath fill='%234CAF50' d='M50 30 L65 55 L35 55 Z'/%3E%3Cpath fill='%23D4AF37' d='M50 70 L35 45 L65 45 Z'/%3E%3C/svg%3E">
-    <meta name="description" content="Агро нового времени: рынки, семена, технологии, аналитика. Ежедневный инструмент фермера и инвестора.">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <meta name="description" content="Агро нового часу: ринки, генетика, технології, аналітика. Щоденний інструмент фермера та інвестора.">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            background: #0A0F0D;
-            font-family: 'Inter', system-ui, -apple-system, sans-serif;
-            color: #EFF3E8;
-            line-height: 1.5;
-            scroll-behavior: smooth;
-        }
-
-        /* Glassmorphism & Theme */
-        :root {
-            --bg-dark: #0A0F0D;
-            --surface-dark: rgba(18, 25, 20, 0.75);
-            --surface-glass: rgba(30, 40, 30, 0.6);
-            --green-primary: #2E7D32;
-            --green-accent: #4CAF50;
-            --gold: #D4AF37;
-            --gold-glow: rgba(212, 175, 55, 0.2);
-            --border-light: rgba(80, 100, 70, 0.4);
-            --text-secondary: #B8C7B2;
-        }
-
-        /* Custom scroll */
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #141E18;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: var(--green-primary);
-            border-radius: 10px;
-        }
-
-        /* Layout */
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 0 2rem;
-        }
-
-        /* Header & Nav */
-        .header {
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            backdrop-filter: blur(16px);
-            background: rgba(10, 15, 13, 0.85);
-            border-bottom: 1px solid var(--border-light);
-            padding: 0.8rem 0;
-        }
-        .nav-container {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 1rem;
-        }
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 0.6rem;
-            font-size: 1.7rem;
-            font-weight: 700;
-        }
-        .logo-icon {
-            background: linear-gradient(135deg, var(--green-accent), var(--gold));
-            width: 36px;
-            height: 36px;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.4rem;
-        }
-        .logo span {
-            background: linear-gradient(135deg, #FFF, var(--gold));
-            background-clip: text;
-            -webkit-background-clip: text;
-            color: transparent;
-        }
-        .nav-links {
-            display: flex;
-            gap: 1.8rem;
-            font-weight: 500;
-        }
-        .nav-links a {
-            text-decoration: none;
-            color: var(--text-secondary);
-            transition: 0.2s;
-        }
-        .nav-links a:hover {
-            color: var(--gold);
-        }
-        .search-lang {
-            display: flex;
-            gap: 1rem;
-            align-items: center;
-        }
-        .search-box {
-            background: rgba(30, 40, 30, 0.7);
-            border-radius: 40px;
-            padding: 0.4rem 0.8rem;
-            display: flex;
-            align-items: center;
-            gap: 0.4rem;
-            border: 1px solid var(--border-light);
-        }
-        .search-box input {
-            background: transparent;
-            border: none;
-            color: white;
-            font-size: 0.9rem;
-            outline: none;
-            width: 140px;
-        }
-        .lang-switch {
-            display: flex;
-            gap: 0.4rem;
-            background: rgba(0,0,0,0.4);
-            padding: 0.3rem 0.6rem;
-            border-radius: 30px;
-        }
-        .lang-btn {
-            background: none;
-            border: none;
-            color: var(--text-secondary);
-            cursor: pointer;
-            font-weight: 600;
-            padding: 0.2rem 0.5rem;
-            border-radius: 30px;
-            transition: 0.2s;
-        }
-        .lang-btn.active {
-            background: var(--green-primary);
-            color: white;
-        }
-        /* Hero */
-        .hero {
-            padding: 4rem 0 5rem;
-            text-align: center;
-            background: radial-gradient(circle at 20% 30%, rgba(46,125,50,0.15), transparent);
-        }
-        .hero h1 {
-            font-size: 3.8rem;
-            font-weight: 700;
-            background: linear-gradient(135deg, #FFFFFF, var(--gold));
-            background-clip: text;
-            -webkit-background-clip: text;
-            color: transparent;
-            letter-spacing: -0.02em;
-            margin-bottom: 1rem;
-        }
-        .hero .sub {
-            font-size: 1.3rem;
-            color: var(--text-secondary);
-            max-width: 700px;
-            margin: 0 auto 2rem;
-        }
-        .cta-group {
-            display: flex;
-            justify-content: center;
-            gap: 1.2rem;
-            flex-wrap: wrap;
-        }
-        .btn {
-            padding: 0.9rem 2rem;
-            border-radius: 60px;
-            font-weight: 600;
-            text-decoration: none;
-            transition: 0.2s;
-            border: none;
-            cursor: pointer;
-            font-size: 1rem;
-        }
-        .btn-primary {
-            background: linear-gradient(95deg, var(--green-primary), var(--green-accent));
-            color: white;
-            box-shadow: 0 4px 12px rgba(46,125,50,0.3);
-        }
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(46,125,50,0.4);
-        }
-        .btn-outline {
-            background: transparent;
-            border: 1px solid var(--gold);
-            color: var(--gold);
-        }
-        .btn-outline:hover {
-            background: var(--gold-glow);
-        }
-
-        /* Ticker */
-        .ticker {
-            background: #0C1410;
-            border-top: 1px solid var(--border-light);
-            border-bottom: 1px solid var(--border-light);
-            padding: 0.7rem 0;
-            overflow: hidden;
-            white-space: nowrap;
-        }
-        .ticker-content {
-            display: inline-block;
-            animation: tickerScroll 28s linear infinite;
-            font-size: 0.95rem;
-            letter-spacing: 0.5px;
-        }
-        .ticker-content span {
-            margin-right: 2rem;
-        }
-        .ticker-content i {
-            color: var(--gold);
-            margin-right: 6px;
-        }
-        @keyframes tickerScroll {
-            0% { transform: translateX(0%); }
-            100% { transform: translateX(-50%); }
-        }
-
-        /* Grid cards */
-        .section-title {
-            font-size: 2rem;
-            font-weight: 600;
-            margin: 2.5rem 0 1.5rem;
-            border-left: 5px solid var(--gold);
-            padding-left: 1rem;
-        }
-        .grid-cards {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-            gap: 1.8rem;
-            margin-bottom: 2rem;
-        }
-        .card {
-            background: var(--surface-glass);
-            backdrop-filter: blur(8px);
-            border-radius: 28px;
-            border: 1px solid var(--border-light);
-            padding: 1.5rem;
-            transition: all 0.25s;
-        }
-        .card:hover {
-            transform: translateY(-6px);
-            border-color: var(--gold);
-            box-shadow: 0 20px 30px -12px rgba(0,0,0,0.5);
-        }
-        .card i {
-            font-size: 2rem;
-            color: var(--gold);
-            margin-bottom: 1rem;
-        }
-        .card h3 {
-            font-size: 1.5rem;
-            margin-bottom: 0.5rem;
-        }
-        .card p {
-            color: var(--text-secondary);
-            margin-bottom: 1.2rem;
-        }
-        .badge {
-            background: rgba(212,175,55,0.2);
-            color: var(--gold);
-            border-radius: 40px;
-            padding: 0.2rem 0.8rem;
-            font-size: 0.75rem;
-            font-weight: 600;
-        }
-
-        /* Live Market Table */
-        .market-panel {
-            background: var(--surface-dark);
-            backdrop-filter: blur(12px);
-            border-radius: 28px;
-            padding: 1.5rem;
-            margin: 1rem 0;
-            border: 1px solid var(--border-light);
-        }
-        .flex-between {
-            display: flex;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            align-items: center;
-        }
-        .price-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 1rem;
-        }
-        .price-table th, .price-table td {
-            padding: 0.8rem 0.4rem;
-            border-bottom: 1px solid var(--border-light);
-            text-align: left;
-        }
-        .positive {
-            color: #6fcf97;
-        }
-        .negative {
-            color: #e67e7e;
-        }
-        .index-big {
-            font-size: 2rem;
-            font-weight: 700;
-        }
-
-        /* risk + weather */
-        .row-2col {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1.5rem;
-            margin: 1rem 0;
-        }
-        @media (max-width: 760px) {
-            .row-2col { grid-template-columns: 1fr; }
-            .hero h1 { font-size: 2.2rem; }
-            .container { padding: 0 1.2rem; }
-            .nav-links { display: none; } /* упрощённо для мобилы, но можно гамбургер, оставляем основное */
-            .search-box input { width: 100px; }
-        }
-
-        footer {
-            margin-top: 4rem;
-            background: #07120B;
-            border-top: 1px solid var(--border-light);
-            padding: 2rem 0;
-            font-size: 0.85rem;
-            color: #8f9e8a;
-        }
-        .footer-grid {
-            display: flex;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 1.5rem;
-        }
-        .footer-links a {
-            color: #B8C7B2;
-            text-decoration: none;
-            margin-right: 1.5rem;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background: #0A0F0D; font-family: 'Inter', sans-serif; color: #EFF3E8; line-height: 1.5; scroll-behavior: smooth; }
+        :root { --bg-dark: #0A0F0D; --surface-glass: rgba(30, 40, 30, 0.6); --surface-dark: rgba(18, 25, 20, 0.85); --green-primary: #2E7D32; --green-accent: #4CAF50; --gold: #D4AF37; --border-light: rgba(80,100,70,0.4); --text-secondary: #B8C7B2; }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #141E18; }
+        ::-webkit-scrollbar-thumb { background: var(--green-primary); border-radius: 10px; }
+        .container { max-width: 1400px; margin: 0 auto; padding: 0 2rem; }
+        .header { position: sticky; top: 0; z-index: 100; backdrop-filter: blur(16px); background: rgba(10,15,13,0.95); border-bottom: 1px solid var(--border-light); padding: 0.8rem 0; }
+        .nav-container { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; }
+        .logo { display: flex; align-items: center; gap: 0.6rem; font-size: 1.7rem; font-weight: 700; }
+        .logo-icon { background: linear-gradient(135deg, var(--green-accent), var(--gold)); width: 36px; height: 36px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; }
+        .logo span { background: linear-gradient(135deg, #FFF, var(--gold)); background-clip: text; -webkit-background-clip: text; color: transparent; }
+        .nav-links { display: flex; gap: 1.8rem; font-weight: 500; flex-wrap: wrap; }
+        .nav-links a { text-decoration: none; color: var(--text-secondary); transition: 0.2s; cursor: pointer; padding: 0.3rem 0; border-bottom: 2px solid transparent; }
+        .nav-links a:hover, .nav-links a.active { color: var(--gold); border-bottom-color: var(--gold); }
+        .search-lang { display: flex; gap: 1rem; align-items: center; }
+        .search-box { background: rgba(30,40,30,0.7); border-radius: 40px; padding: 0.4rem 0.8rem; display: flex; align-items: center; gap: 0.4rem; border: 1px solid var(--border-light); }
+        .search-box input { background: transparent; border: none; color: white; font-size: 0.9rem; outline: none; width: 140px; }
+        .lang-switch { display: flex; gap: 0.4rem; background: rgba(0,0,0,0.4); padding: 0.3rem 0.6rem; border-radius: 30px; }
+        .lang-btn { background: none; border: none; color: var(--text-secondary); cursor: pointer; font-weight: 600; padding: 0.2rem 0.5rem; border-radius: 30px; transition: 0.2s; }
+        .lang-btn.active { background: var(--green-primary); color: white; }
+        .hero { padding: 3rem 0 2rem; text-align: center; background: radial-gradient(circle at 20% 30%, rgba(46,125,50,0.15), transparent); }
+        .hero h1 { font-size: 3.5rem; font-weight: 800; background: linear-gradient(135deg, #FFF, var(--gold)); background-clip: text; -webkit-background-clip: text; color: transparent; }
+        .hero .sub { font-size: 1.2rem; color: var(--text-secondary); max-width: 700px; margin: 1rem auto 0; }
+        .cta-group { display: flex; justify-content: center; gap: 1rem; margin-top: 1.8rem; flex-wrap: wrap; }
+        .btn { padding: 0.75rem 1.8rem; border-radius: 60px; font-weight: 600; transition: 0.2s; cursor: pointer; border: none; font-size: 0.95rem; }
+        .btn-primary { background: linear-gradient(95deg, var(--green-primary), var(--green-accent)); color: white; box-shadow: 0 4px 12px rgba(46,125,50,0.3); }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 20px rgba(46,125,50,0.4); }
+        .btn-outline { background: transparent; border: 1px solid var(--gold); color: var(--gold); }
+        .btn-outline:hover { background: rgba(212,175,55,0.15); transform: translateY(-2px); }
+        .btn.active { background: var(--green-primary); color: white; border: none; box-shadow: 0 0 8px var(--green-accent); }
+        .ticker { background: #0C1410; border-top: 1px solid var(--border-light); border-bottom: 1px solid var(--border-light); padding: 0.7rem 0; overflow: hidden; white-space: nowrap; }
+        .ticker-content { display: inline-block; animation: tickerScroll 28s linear infinite; font-size: 0.9rem; }
+        .ticker-content span { margin-right: 2rem; }
+        .ticker-content i { color: var(--gold); margin-right: 6px; }
+        @keyframes tickerScroll { 0% { transform: translateX(0%); } 100% { transform: translateX(-50%); } }
+        .section { padding: 2rem 0; border-bottom: 1px solid var(--border-light); scroll-margin-top: 80px; }
+        .section-title { font-size: 2rem; font-weight: 700; margin-bottom: 1.5rem; border-left: 5px solid var(--gold); padding-left: 1rem; }
+        .grid-cards, .grid-catalog { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1.8rem; margin-bottom: 1rem; }
+        .card { background: var(--surface-glass); backdrop-filter: blur(8px); border-radius: 28px; border: 1px solid var(--border-light); padding: 1.5rem; transition: 0.25s; }
+        .card:hover { transform: translateY(-6px); border-color: var(--gold); }
+        .card i { font-size: 2rem; color: var(--gold); margin-bottom: 1rem; }
+        .card h3 { font-size: 1.5rem; margin-bottom: 0.5rem; }
+        .card p { color: var(--text-secondary); margin-bottom: 1rem; }
+        .badge { background: rgba(212,175,55,0.2); color: var(--gold); border-radius: 40px; padding: 0.2rem 0.8rem; font-size: 0.7rem; font-weight: 600; display: inline-block; margin-right: 0.5rem; margin-bottom: 0.5rem; }
+        .price-tag { font-size: 1.3rem; font-weight: 700; color: var(--gold); margin: 0.5rem 0; }
+        .btn-card { background: transparent; border: 1px solid var(--green-accent); color: var(--green-accent); padding: 0.5rem 1rem; border-radius: 40px; cursor: pointer; font-weight: 600; width: 100%; transition: 0.2s; }
+        .btn-card:hover { background: var(--green-accent); color: #0A0F0D; }
+        .market-panel { background: var(--surface-dark); backdrop-filter: blur(12px); border-radius: 28px; padding: 1.5rem; margin: 1rem 0; border: 1px solid var(--border-light); }
+        .flex-between { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; }
+        .price-table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
+        .price-table th, .price-table td { padding: 0.8rem 0.4rem; border-bottom: 1px solid var(--border-light); text-align: left; }
+        .positive { color: #6fcf97; }
+        .negative { color: #e67e7e; }
+        .index-big { font-size: 2rem; font-weight: 700; }
+        .row-2col { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin: 1rem 0; }
+        canvas { max-height: 180px; width: 100%; margin-top: 1rem; }
+        .cart-sidebar { position: fixed; right: -420px; top: 0; width: 400px; height: 100%; background: #0E1712; border-left: 1px solid var(--gold); backdrop-filter: blur(20px); z-index: 200; transition: 0.3s; padding: 2rem 1.5rem; display: flex; flex-direction: column; }
+        .cart-sidebar.open { right: 0; }
+        .cart-header { display: flex; justify-content: space-between; font-size: 1.4rem; border-bottom: 1px solid var(--border-light); padding-bottom: 0.8rem; }
+        .cart-items { flex: 1; overflow-y: auto; margin: 1rem 0; }
+        .cart-item { display: flex; justify-content: space-between; padding: 0.8rem 0; border-bottom: 0.5px solid var(--border-light); }
+        .cart-total { margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--gold); font-weight: 700; display: flex; justify-content: space-between; }
+        .close-cart { cursor: pointer; font-size: 1.5rem; }
+        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 150; display: none; }
+        .overlay.active { display: block; }
+        .empty-cart { color: var(--text-secondary); text-align: center; padding: 2rem 0; }
+        .telegram-btn { display: inline-block; background: #1f8a4c; color: white; padding: 0.8rem 1rem; border-radius: 60px; text-decoration: none; font-weight: 600; margin-top: 1rem; text-align: center; width: 100%; transition: 0.2s; cursor: pointer; border: none; }
+        .telegram-btn:hover { background: #166b3b; transform: scale(1.02); }
+        .cart-icon { position: relative; cursor: pointer; font-size: 1.5rem; color: var(--gold); margin-left: 1rem; }
+        .cart-count { position: absolute; top: -8px; right: -12px; background: #e67e22; color: white; border-radius: 50%; width: 20px; height: 20px; font-size: 0.7rem; display: flex; align-items: center; justify-content: center; font-weight: bold; }
+        .toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: var(--green-primary); color: white; padding: 0.8rem 1.5rem; border-radius: 60px; z-index: 250; opacity: 0; transition: 0.3s; pointer-events: none; }
+        .faq-item { margin-bottom: 1rem; border-bottom: 1px solid var(--border-light); padding-bottom: 0.8rem; }
+        .faq-question { font-weight: 700; color: var(--gold); cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
+        .faq-question i { transition: 0.2s; }
+        .faq-answer { margin-top: 0.5rem; color: var(--text-secondary); display: none; padding-left: 0.5rem; }
+        .faq-item.open .faq-answer { display: block; }
+        .faq-item.open .faq-question i { transform: rotate(180deg); }
+        footer { margin-top: 3rem; background: #07120B; padding: 2rem 0; text-align: center; color: #8f9e8a; border-top: 1px solid var(--border-light); }
+        .footer-grid { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 1.5rem; align-items: center; }
+        @media (max-width: 760px) { .row-2col { grid-template-columns: 1fr; } .hero h1 { font-size: 2.2rem; } .container { padding: 0 1.2rem; } .nav-links { gap: 1rem; } .cart-sidebar { width: 100%; right: -100%; } }
     </style>
 </head>
 <body>
-
+<div class="toast" id="toastMsg">✓ Додано до кошика</div>
 <header class="header">
     <div class="container nav-container">
-        <div class="logo">
-            <div class="logo-icon"><i class="fas fa-seedling"></i></div>
-            <span>AGRONEEW</span>
-        </div>
+        <div class="logo"><div class="logo-icon"><i class="fas fa-dna"></i></div><span>AGRONEEW</span></div>
         <div class="nav-links">
-            <a href="#" data-i18n="nav_news">Новости</a>
-            <a href="#" data-i18n="nav_seeds">Семена</a>
-            <a href="#" data-i18n="nav_analytics">Аналитика</a>
-            <a href="#" data-i18n="nav_tech">Технологии</a>
+            <a data-section="news" data-i18n="nav_news">Новини</a>
+            <a data-section="catalog" data-i18n="nav_catalog">Каталог генетики</a>
+            <a data-section="analytics" data-i18n="nav_analytics">Аналітика</a>
+            <a data-section="tech" data-i18n="nav_tech">Технології</a>
         </div>
         <div class="search-lang">
-            <div class="search-box">
-                <i class="fas fa-search"></i>
-                <input type="text" placeholder="Поиск..." data-i18n-placeholder="search_placeholder">
-            </div>
+            <div class="search-box"><i class="fas fa-search"></i><input type="text" placeholder="Пошук..." data-i18n-placeholder="search_placeholder"></div>
             <div class="lang-switch">
+                <button class="lang-btn" data-lang="uk">UA</button>
                 <button class="lang-btn" data-lang="ru">RU</button>
                 <button class="lang-btn" data-lang="en">EN</button>
             </div>
+            <div class="cart-icon" id="cartIcon"><i class="fas fa-shopping-basket"></i><span id="cartCount" class="cart-count">0</span></div>
         </div>
     </div>
 </header>
-
 <main>
-    <!-- Hero -->
     <div class="hero">
         <div class="container">
-            <h1 data-i18n="hero_title">Агро нового времени</h1>
-            <div class="sub" data-i18n="hero_desc">Рынки. Семена. Технологии. Всё в одном потоке.</div>
+            <h1 data-i18n="hero_title">Агро нового часу</h1>
+            <div class="sub" data-i18n="hero_desc">Ринки. Генетика. Технології. Аналітика. В одному потоці.</div>
             <div class="cta-group">
-                <a href="#" class="btn btn-primary" data-i18n="btn_news">Новости</a>
-                <a href="#" class="btn btn-outline" data-i18n="btn_catalog">Каталог семян</a>
-                <a href="#" class="btn btn-outline" data-i18n="btn_analytics">Аналитика</a>
+                <button class="btn btn-primary" data-section="news" data-i18n="btn_news">Новини</button>
+                <button class="btn btn-outline" data-section="catalog" data-i18n="btn_catalog">Каталог генетики</button>
+                <button class="btn btn-outline" data-section="analytics" data-i18n="btn_analytics">Аналітика</button>
             </div>
         </div>
     </div>
-
-    <!-- Бегущая строка цен / новостей -->
-    <div class="ticker">
-        <div class="ticker-content" id="tickerText">
-            <!-- динамически через JS -->
-        </div>
-    </div>
-
+    <div class="ticker"><div class="ticker-content" id="tickerText"></div></div>
     <div class="container">
-        <!-- Агро Индекс дня + погода + рекомендации -->
+        <!-- Блоки індексу та погоди (завжди видимі) -->
         <div class="row-2col">
             <div class="market-panel">
-                <div class="flex-between">
-                    <h3><i class="fas fa-chart-line"></i> <span data-i18n="agro_index">Агро индекс дня</span></h3>
-                    <span class="badge" data-i18n="live">LIVE</span>
-                </div>
+                <div class="flex-between"><h3><i class="fas fa-chart-line"></i> <span data-i18n="agro_index">Агро індекс дня</span></h3><span class="badge" data-i18n="live">LIVE</span></div>
                 <div class="index-big" id="agroIndexValue">1245.67</div>
                 <div id="agroChange" class="positive">+0.82% ▲</div>
-                <p data-i18n="index_desc">Интегральный показатель рынка зерновых и масличных</p>
+                <p data-i18n="index_desc">Інтегральний показник ринку зернових та олійних</p>
+                <canvas id="indexChart" width="400" height="120"></canvas>
             </div>
             <div class="market-panel">
-                <h3><i class="fas fa-cloud-sun"></i> <span data-i18n="weather_impact">Погода + влияние на урожай</span></h3>
-                <div id="weatherBlock">
-                    <div><i class="fas fa-map-marker-alt"></i> Черноземье, RU</div>
-                    <div><span id="weatherTemp">+22°C</span> | <span id="weatherDesc">Переменная облачность</span></div>
-                    <div class="positive" data-i18n="weather_good">Влияние: благоприятное, влажность оптимальна</div>
-                </div>
+                <h3><i class="fas fa-cloud-sun"></i> <span data-i18n="weather_impact">Погода + вплив на врожай</span></h3>
+                <div><i class="fas fa-map-marker-alt"></i> <span id="weatherRegion">Чернігівщина, UA</span></div>
+                <div><span id="weatherTemp">+22°C</span> | <span id="weatherDesc">Мінлива хмарність</span></div>
+                <div class="positive" data-i18n="weather_good">Вплив: сприятливий, вологість оптимальна</div>
+                <div class="badge" id="weatherAdvice">Рекомендовано полив</div>
             </div>
         </div>
 
-        <!-- Рынок сегодня + тренды -->
-        <div class="market-panel">
-            <h3><i class="fas fa-chart-simple"></i> <span data-i18n="market_today">Рынок сегодня</span> <span style="font-size:0.8rem;" id="lastUpdate"></span></h3>
-            <table class="price-table" id="priceTable">
-                <thead><tr><th data-i18n="crop">Культура</th><th data-i18n="price">Цена (USD/т)</th><th data-i18n="change">Изм.</th></tr></thead>
-                <tbody id="marketTbody"></tbody>
-            </table>
-            <div style="margin-top:1rem"><span data-i18n="trends_week">🌾 Тренды недели:</span> <span id="trendsList"></span></div>
-        </div>
-
-        <!-- Семена недели (каталог) -->
-        <h2 class="section-title" data-i18n="seeds_week_title">🌱 Семена недели</h2>
-        <div class="grid-cards" id="seedsGrid"></div>
-
-        <!-- Основные разделы: Новости, Технологии, Обучение, Экология -->
-        <h2 class="section-title" data-i18n="live_news">📰 Новости агро</h2>
-        <div class="grid-cards" id="newsGrid"></div>
-
-        <h2 class="section-title" data-i18n="tech_ai">🚜 Технологии / AI в агро</h2>
-        <div class="grid-cards" id="techGrid"></div>
-
-        <div class="row-2col">
-            <div class="card">
-                <i class="fas fa-graduation-cap"></i>
-                <h3 data-i18n="guides_title">Гайды и обучение</h3>
-                <p data-i18n="guides_desc">Точное земледелие, управление рисками, цифровые инструменты.</p>
-                <div class="badge" data-i18n="popular">Популярное</div>
-            </div>
-            <div class="card">
-                <i class="fas fa-leaf"></i>
-                <h3 data-i18n="eco_title">Экология и климат</h3>
-                <p data-i18n="eco_desc">Карбоновые фермы, устойчивое развитие, климатические стратегии.</p>
-                <div class="badge" data-i18n="new">Новое</div>
+        <!-- НОВИНИ -->
+        <div id="newsSection" class="section" style="display: none;">
+            <h2 class="section-title" data-i18n="live_news">📰 Останні новини</h2>
+            <div id="newsGrid" class="grid-cards"></div>
+            <div class="market-panel">
+                <h3><i class="fas fa-calendar-alt"></i> <span data-i18n="agro_calendar">Агрономічний календар</span></h3>
+                <p data-i18n="calendar_text">Травень: посів кукурудзи, захист озимих від хвороб. Червень: моніторинг шкідників, внесення добрив.</p>
             </div>
         </div>
 
-        <!-- Риски сезона и рекомендации что делать сейчас -->
-        <div class="market-panel" style="background: rgba(30,25,15,0.6);">
-            <h3><i class="fas fa-triangle-exclamation"></i> <span data-i18n="season_risks">Риски сезона</span></h3>
-            <p id="riskText" data-i18n="risk_text">Засуха в южных регионах, рост вредителей озимых. Мониторинг влажности критичен.</p>
-            <div style="margin-top:1rem; border-top:1px solid var(--border-light); padding-top:1rem;">
-                <i class="fas fa-tractor"></i> <strong data-i18n="field_action">Что делать сейчас в поле?</strong> 
-                <span id="fieldAdvice" data-i18n="field_advice">Провести подкормку азотом, обработать фунгицидами при первых признаках.</span>
+        <!-- АНАЛІТИКА (ринок + ризики + графік + прогноз) -->
+        <div id="analyticsSection" class="section" style="display: none;">
+            <div class="market-panel">
+                <h3><i class="fas fa-chart-simple"></i> <span data-i18n="market_today">Ринок сьогодні</span> <span style="font-size:0.8rem;" id="lastUpdate"></span></h3>
+                <table class="price-table"><thead><tr><th data-i18n="crop">Культура</th><th data-i18n="price">Ціна (USD/т)</th><th data-i18n="change">Змін.</th></tr></thead><tbody id="marketTbody"></tbody></table>
+                <div><span data-i18n="trends_week">🌾 Тренди тижня:</span> <span id="trendsList"></span></div>
+                <canvas id="priceChart" width="400" height="120"></canvas>
             </div>
+            <div class="market-panel">
+                <h3><i class="fas fa-triangle-exclamation"></i> <span data-i18n="season_risks">Ризики сезону</span></h3>
+                <p id="riskText">Засуха в південних регіонах, зростання шкідників озимих. Моніторинг вологості критичний.</p>
+                <div><i class="fas fa-tractor"></i> <strong data-i18n="field_action">Що робити зараз в полі?</strong> <span id="fieldAdvice">Провести підживлення азотом, обробити фунгіцидами.</span></div>
+            </div>
+            <div class="market-panel">
+                <h3><i class="fas fa-chart-line"></i> <span data-i18n="expert_forecast">Прогноз експертів</span></h3>
+                <p data-i18n="forecast_text">Очікується зростання цін на пшеницю в III кварталі. Рекомендується фіксація прибутку. Попит на олійні залишається високим.</p>
+            </div>
+        </div>
+
+        <!-- ТЕХНОЛОГІЇ -->
+        <div id="techSection" class="section" style="display: none;">
+            <h2 class="section-title" data-i18n="tech_ai">🚜 Технології / AI в агро</h2>
+            <div id="techGrid" class="grid-cards"></div>
+            <div class="row-2col">
+                <div class="card"><i class="fas fa-graduation-cap"></i><h3 data-i18n="guides_title">Гайди та навчання</h3><p data-i18n="guides_desc">Точне землеробство, управління ризиками, цифрові інструменти для фермерів.</p><div class="badge" data-i18n="popular">Популярне</div></div>
+                <div class="card"><i class="fas fa-leaf"></i><h3 data-i18n="eco_title">Екологія та клімат</h3><p data-i18n="eco_desc">Карбонові ферми, сталий розвиток, кліматичні стратегії адаптації.</p><div class="badge" data-i18n="new">Нове</div></div>
+            </div>
+        </div>
+
+        <!-- КАТАЛОГ ГЕНЕТИКИ (видимий за замовчуванням) -->
+        <div id="catalogSection" class="section">
+            <h2 class="section-title" data-i18n="catalog_title">🧬 Каталог агро-генетики</h2>
+            <div id="catalogGrid" class="grid-cards"></div>
+        </div>
+
+        <!-- FAQ блок -->
+        <div class="section">
+            <h2 class="section-title" data-i18n="faq_title">❓ Часті питання</h2>
+            <div class="faq-item"><div class="faq-question"><span data-i18n="faq1_q">Як замовити насіння?</span><i class="fas fa-chevron-down"></i></div><div class="faq-answer" data-i18n="faq1_a">Додайте товари в кошик, натисніть «Оформити замовлення в Telegram» — ми зв'яжемося з вами для уточнення деталей та оплати.</div></div>
+            <div class="faq-item"><div class="faq-question"><span data-i18n="faq2_q">Чи є доставка за кордон?</span><i class="fas fa-chevron-down"></i></div><div class="faq-answer" data-i18n="faq2_a">Так, надсилаємо в будь-яку країну. Вартість доставки розраховується індивідуально в Telegram.</div></div>
+            <div class="faq-item"><div class="faq-question"><span data-i18n="faq3_q">Які методи оплати?</span><i class="fas fa-chevron-down"></i></div><div class="faq-answer" data-i18n="faq3_a">Після узгодження в Telegram — банківський переказ, криптовалюта (USDT, BTC) або готівка при самовивозі.</div></div>
+            <div class="faq-item"><div class="faq-question"><span data-i18n="faq4_q">Чи можна отримати консультацію?</span><i class="fas fa-chevron-down"></i></div><div class="faq-answer" data-i18n="faq4_a">Так, наші агрономи безкоштовно консультують у Telegram. Пишіть — допоможемо підібрати генетику під ваші умови.</div></div>
         </div>
     </div>
 </main>
-
 <footer>
     <div class="container footer-grid">
-        <div>© 2025 AGRONEEW — <span data-i18n="footer_slogan">агро-нервная система будущего</span></div>
-        <div class="footer-links">
-            <a href="#" data-i18n="about">О проекте</a>
-            <a href="#" data-i18n="contacts">Контакты</a>
-            <a href="#" data-i18n="privacy">Политика</a>
-        </div>
+        <div>© 2025 AGRONEEW — <span data-i18n="footer_slogan">агро-нервова система майбутнього</span></div>
+        <div><a href="https://t.me/agrocan" target="_blank" style="color:var(--gold); text-decoration:none;"><i class="fab fa-telegram"></i> Telegram канал</a></div>
+        <div><span data-i18n="contacts">Контакти:</span> agroneew@proton.me</div>
     </div>
 </footer>
 
+<div class="overlay" id="overlay"></div>
+<div class="cart-sidebar" id="cartSidebar">
+    <div class="cart-header"><span data-i18n="cart_title">Кошик вибору</span><span class="close-cart" id="closeCartBtn">&times;</span></div>
+    <div id="cartItemsList" class="cart-items"><div class="empty-cart" data-i18n="empty_cart">Кошик порожній</div></div>
+    <div class="cart-total"><span data-i18n="total_label">Всього:</span> <span id="cartTotalPrice">0 USD</span></div>
+    <button id="clearCartBtn" class="btn-outline" style="width:100%; margin-bottom:0.5rem;" data-i18n="clear_cart">Очистити кошик</button>
+    <button id="checkoutTelegramBtn" class="telegram-btn"><i class="fab fa-telegram"></i> <span data-i18n="checkout_btn">Оформити замовлення в Telegram</span></button>
+</div>
+
 <script>
-    // ---------------------- MULTI-LANG (RU/EN) ----------------------
+    // ---------- КАТАЛОГ (ТІЛЬКИ ВКАЗАНІ СОРТИ) ----------
+    const catalogData = [
+        { name: "Oreshnik Seeds", type: "Auto / Regular", traits: ["fast","unpretentious","northern climate","stable genetics"], cycle: "2 months", description: "Stable genetics line for harsh climates, high resin production. Ideal for northern regions.", price: 49.99, yield: "450-550 g/m²", height: "100-140 cm" },
+        { name: "Hutor Seeds", type: "Auto / Regular", traits: ["resilient","outdoor","fast growth","unpretentious"], cycle: "2 months", description: "Rural selection genetics, perfect for open ground. Excellent mold resistance.", price: 44.99, yield: "500-600 g/m²", height: "90-120 cm" },
+        { name: "Artemius Seeds", type: "Auto / Regular", traits: ["aromatic","high yield","stable genetics","fast"], cycle: "2 months", description: "Balanced hybrid with complex terpene profile. High essential oil content.", price: 54.99, yield: "550-650 g/m²", height: "110-150 cm" },
+        { name: "Romuald Seeds", type: "Auto / Regular", traits: ["northern climate","resilient","fast","unpretentious"], cycle: "2 months", description: "Cold-resistant genetics, early flowering. Suitable for short summers.", price: 47.99, yield: "480-580 g/m²", height: "80-110 cm" },
+        { name: "New Genetics Line: CBD 1:1 THC", type: "CBD/THC 1:1", traits: ["medical","balanced","low psychoactivity","stable genetics"], cycle: "2 months", description: "Equal parts CBD and THC for therapeutic effect without intoxication. High terpene profile.", price: 69.99, yield: "400-500 g/m²", height: "100-130 cm" }
+    ];
+
+    // ---------- МУЛЬТИМОВНІСТЬ (UK, RU, EN) ----------
     const translations = {
+        uk: {
+            hero_title: "Агро нового часу", hero_desc: "Ринки. Генетика. Технології. Аналітика. В одному потоці.", btn_news: "Новини", btn_catalog: "Каталог генетики", btn_analytics: "Аналітика",
+            nav_news: "Новини", nav_catalog: "Каталог генетики", nav_analytics: "Аналітика", nav_tech: "Технології", search_placeholder: "Пошук...",
+            agro_index: "Агро індекс дня", live: "LIVE", index_desc: "Інтегральний показник ринку зернових та олійних",
+            weather_impact: "Погода + вплив на врожай", weather_good: "Вплив: сприятливий, вологість оптимальна",
+            market_today: "Ринок сьогодні", crop: "Культура", price: "Ціна (USD/т)", change: "Змін.", trends_week: "🌾 Тренди тижня:",
+            season_risks: "Ризики сезону", field_action: "Що робити зараз в полі?", live_news: "📰 Останні новини", tech_ai: "🚜 Технології / AI в агро",
+            catalog_title: "🧬 Каталог агро-генетики", add_to_cart: "Додати до кошика", type_label: "Тип", cycle_label: "Цикл", traits_label: "Теги",
+            cart_title: "Кошик вибору", empty_cart: "Кошик порожній", total_label: "Всього:", checkout_btn: "Оформити замовлення в Telegram", clear_cart: "Очистити кошик",
+            footer_slogan: "агро-нервова система майбутнього", contacts: "Контакти",
+            agro_calendar: "Агрономічний календар", calendar_text: "Травень: посів кукурудзи, захист озимих від хвороб. Червень: моніторинг шкідників, внесення добрив.",
+            expert_forecast: "Прогноз експертів", forecast_text: "Очікується зростання цін на пшеницю в III кварталі. Рекомендується фіксація прибутку. Попит на олійні залишається високим.",
+            guides_title: "Гайди та навчання", guides_desc: "Точне землеробство, управління ризиками, цифрові інструменти для фермерів.", popular: "Популярне",
+            eco_title: "Екологія та клімат", eco_desc: "Карбонові ферми, сталий розвиток, кліматичні стратегії адаптації.", new: "Нове",
+            faq_title: "❓ Часті питання", faq1_q: "Як замовити насіння?", faq1_a: "Додайте товари в кошик, натисніть «Оформити замовлення в Telegram» — ми зв'яжемося з вами для уточнення деталей та оплати.",
+            faq2_q: "Чи є доставка за кордон?", faq2_a: "Так, надсилаємо в будь-яку країну. Вартість доставки розраховується індивідуально в Telegram.",
+            faq3_q: "Які методи оплати?", faq3_a: "Після узгодження в Telegram — банківський переказ, криптовалюта (USDT, BTC) або готівка при самовивозі.",
+            faq4_q: "Чи можна отримати консультацію?", faq4_a: "Так, наші агрономи безкоштовно консультують у Telegram. Пишіть — допоможемо підібрати генетику під ваші умови.",
+            news1: "Світові ціни на пшеницю зросли на 7%", news2: "Новий дрон-обпилювач представлено в Україні", news3: "ЄС схвалив нові еко-стандарти",
+            tech1: "ШІ прогнозування врожаю", tech2: "Автономні трактори на базі 5G", tech3: "Супутниковий моніторинг NDVI"
+        },
         ru: {
-            hero_title: "Агро нового времени",
-            hero_desc: "Рынки. Семена. Технологии. Всё в одном потоке.",
-            btn_news: "Новости", btn_catalog: "Каталог семян", btn_analytics: "Аналитика",
-            nav_news: "Новости", nav_seeds: "Семена", nav_analytics: "Аналитика", nav_tech: "Технологии",
-            search_placeholder: "Поиск...",
+            hero_title: "Агро нового времени", hero_desc: "Рынки. Генетика. Технологии. Аналитика. В одном потоке.", btn_news: "Новости", btn_catalog: "Каталог генетики", btn_analytics: "Аналитика",
+            nav_news: "Новости", nav_catalog: "Каталог генетики", nav_analytics: "Аналитика", nav_tech: "Технологии", search_placeholder: "Поиск...",
             agro_index: "Агро индекс дня", live: "LIVE", index_desc: "Интегральный показатель рынка зерновых и масличных",
             weather_impact: "Погода + влияние на урожай", weather_good: "Влияние: благоприятное, влажность оптимальна",
-            market_today: "Рынок сегодня", crop: "Культура", price: "Цена (USD/т)", change: "Изм.",
-            trends_week: "🌾 Тренды недели:",
-            seeds_week_title: "🌱 Семена недели", live_news: "📰 Новости агро", tech_ai: "🚜 Технологии / AI в агро",
-            guides_title: "Гайды и обучение", guides_desc: "Точное земледелие, управление рисками, цифровые инструменты.",
-            eco_title: "Экология и климат", eco_desc: "Карбоновые фермы, устойчивое развитие, климатические стратегии.",
-            popular: "Популярное", new: "Новое", season_risks: "Риски сезона", risk_text: "Засуха в южных регионах, рост вредителей озимых. Мониторинг влажности критичен.",
-            field_action: "Что делать сейчас в поле?", field_advice: "Провести подкормку азотом, обработать фунгицидами при первых признаках.",
-            footer_slogan: "агро-нервная система будущего", about: "О проекте", contacts: "Контакты", privacy: "Политика",
-            // динамические карточки (контент)
-            seed1: "Пшеница Элита", seed2: "Кукуруза ДКС 3510", seed3: "Подсолнечник НК Неома",
-            seed1_desc: "Урожайность до 85 ц/га, устойчивость к засухе", seed2_desc: "Высокое содержание масла, раннеспелый", seed3_desc: "Иммунитет к заразихе",
-            news1: "Мировые цены на пшеницу выросли на 7%", news2: "Новый дрон-опылитель представлен в РФ", news3: "ЕС утвердил новые эко-стандарты", 
+            market_today: "Рынок сегодня", crop: "Культура", price: "Цена (USD/т)", change: "Изм.", trends_week: "🌾 Тренды недели:",
+            season_risks: "Риски сезона", field_action: "Что делать сейчас в поле?", live_news: "📰 Новости агро", tech_ai: "🚜 Технологии / AI в агро",
+            catalog_title: "🧬 Каталог агро-генетики", add_to_cart: "Добавить в корзину", type_label: "Тип", cycle_label: "Цикл", traits_label: "Теги",
+            cart_title: "Корзина выбора", empty_cart: "Корзина пуста", total_label: "Итого:", checkout_btn: "Оформить заказ в Telegram", clear_cart: "Очистить корзину",
+            footer_slogan: "агро-нервная система будущего", contacts: "Контакты",
+            agro_calendar: "Агрономический календарь", calendar_text: "Май: посев кукурузы, защита озимых от болезней. Июнь: мониторинг вредителей, внесение удобрений.",
+            expert_forecast: "Прогноз экспертов", forecast_text: "Ожидается рост цен на пшеницу в III квартале. Рекомендуется фиксация прибыли. Спрос на масличные остается высоким.",
+            guides_title: "Гайды и обучение", guides_desc: "Точное земледелие, управление рисками, цифровые инструменты для фермеров.", popular: "Популярное",
+            eco_title: "Экология и климат", eco_desc: "Карбоновые фермы, устойчивое развитие, климатические стратегии адаптации.", new: "Новое",
+            faq_title: "❓ Частые вопросы", faq1_q: "Как заказать семена?", faq1_a: "Добавьте товары в корзину, нажмите «Оформить заказ в Telegram» — мы свяжемся с вами для уточнения деталей и оплаты.",
+            faq2_q: "Есть ли доставка за границу?", faq2_a: "Да, отправляем в любую страну. Стоимость доставки рассчитывается индивидуально в Telegram.",
+            faq3_q: "Какие методы оплаты?", faq3_a: "После согласования в Telegram — банковский перевод, криптовалюта (USDT, BTC) или наличные при самовывозе.",
+            faq4_q: "Можно ли получить консультацию?", faq4_a: "Да, наши агрономы бесплатно консультируют в Telegram. Пишите — поможем подобрать генетику под ваши условия.",
+            news1: "Мировые цены на пшеницу выросли на 7%", news2: "Новый дрон-опылитель представлен в РФ", news3: "ЕС утвердил новые эко-стандарты",
             tech1: "ИИ прогнозирование урожая", tech2: "Автономные тракторы на базе 5G", tech3: "Спутниковый мониторинг NDVI"
         },
         en: {
-            hero_title: "Agriculture of the new era",
-            hero_desc: "Markets. Seeds. Technology. All in one stream.",
-            btn_news: "News", btn_catalog: "Seed catalog", btn_analytics: "Analytics",
-            nav_news: "News", nav_seeds: "Seeds", nav_analytics: "Analytics", nav_tech: "Tech",
-            search_placeholder: "Search...",
+            hero_title: "Agriculture of the new era", hero_desc: "Markets. Genetics. Technology. Analytics. All in one stream.", btn_news: "News", btn_catalog: "Genetics catalog", btn_analytics: "Analytics",
+            nav_news: "News", nav_catalog: "Genetics", nav_analytics: "Analytics", nav_tech: "Tech", search_placeholder: "Search...",
             agro_index: "Agro Index Today", live: "LIVE", index_desc: "Integral grain & oilseed market indicator",
             weather_impact: "Weather + Crop Impact", weather_good: "Impact: favorable, optimal humidity",
-            market_today: "Market Today", crop: "Crop", price: "Price (USD/t)", change: "Chg",
-            trends_week: "🌾 Weekly trends:",
-            seeds_week_title: "🌱 Seeds of the week", live_news: "📰 Ag News", tech_ai: "🚜 Tech / AI in Ag",
-            guides_title: "Guides & Training", guides_desc: "Precision farming, risk management, digital tools.",
-            eco_title: "Ecology & Climate", eco_desc: "Carbon farming, sustainability, climate strategies.",
-            popular: "Popular", new: "New", season_risks: "Seasonal risks", risk_text: "Drought in southern regions, pests on winter crops. Critical moisture monitoring.",
-            field_action: "What to do in the field now?", field_advice: "Apply nitrogen top dressing, fungicides at first signs.",
-            footer_slogan: "agro-nervous system of the future", about: "About", contacts: "Contacts", privacy: "Privacy",
-            seed1: "Elite Wheat", seed2: "DKC 3510 Corn", seed3: "NK Neoma Sunflower",
-            seed1_desc: "Yield up to 85 c/ha, drought resistance", seed2_desc: "High oil content, early maturing", seed3_desc: "Immunity to broomrape",
-            news1: "Global wheat prices up 7%", news2: "New pollinator drone unveiled in Russia", news3: "EU approves new eco-standards",
+            market_today: "Market Today", crop: "Crop", price: "Price (USD/t)", change: "Chg", trends_week: "🌾 Weekly trends:",
+            season_risks: "Seasonal risks", field_action: "What to do in the field now?", live_news: "📰 Ag News", tech_ai: "🚜 Tech / AI in Ag",
+            catalog_title: "🧬 Genetics Catalog", add_to_cart: "Add to cart", type_label: "Type", cycle_label: "Cycle", traits_label: "Tags",
+            cart_title: "Selection Cart", empty_cart: "Cart is empty", total_label: "Total:", checkout_btn: "Order via Telegram", clear_cart: "Clear cart",
+            footer_slogan: "agro-nervous system of the future", contacts: "Contacts",
+            agro_calendar: "Agronomic calendar", calendar_text: "May: corn sowing, winter crop protection. June: pest monitoring, fertilization.",
+            expert_forecast: "Expert forecast", forecast_text: "Wheat prices expected to rise in Q3. Profit taking recommended. Demand for oilseeds remains high.",
+            guides_title: "Guides & Training", guides_desc: "Precision farming, risk management, digital tools for farmers.", popular: "Popular",
+            eco_title: "Ecology & Climate", eco_desc: "Carbon farming, sustainability, climate adaptation strategies.", new: "New",
+            faq_title: "❓ FAQ", faq1_q: "How to order seeds?", faq1_a: "Add items to cart, click 'Order via Telegram' — we will contact you for details and payment.",
+            faq2_q: "Do you ship internationally?", faq2_a: "Yes, we ship worldwide. Shipping cost calculated individually in Telegram.",
+            faq3_q: "Payment methods?", faq3_a: "After agreement in Telegram — bank transfer, crypto (USDT, BTC) or cash on pickup.",
+            faq4_q: "Can I get a consultation?", faq4_a: "Yes, our agronomists provide free consultations in Telegram. Write to us — we'll help you choose genetics for your conditions.",
+            news1: "Global wheat prices up 7%", news2: "New pollinator drone unveiled", news3: "EU approves new eco-standards",
             tech1: "AI yield forecasting", tech2: "Autonomous 5G tractors", tech3: "Satellite NDVI monitoring"
         }
     };
-    let currentLang = 'ru';
+
+    let currentLang = 'uk';
+    let cart = [];
+    let marketData = [
+        { name: "Пшениця", price: 245.5, change: 2.1, nameEn: "Wheat" },
+        { name: "Кукурудза", price: 218.3, change: -0.7, nameEn: "Corn" },
+        { name: "Соняшник", price: 512.0, change: 1.4, nameEn: "Sunflower" },
+        { name: "Ячмінь", price: 198.2, change: -0.2, nameEn: "Barley" }
+    ];
+    let agroHistory = [1240,1243,1247,1245,1248,1246,1245.67];
+    let priceHistory = [240,238,242,245,243,246,245.5];
+    let agroValue = 1245.67;
+    let chartIndex, chartPrice;
+
+    // DOM
+    const catalogGrid = document.getElementById('catalogGrid');
+    const cartItemsList = document.getElementById('cartItemsList');
+    const cartCountSpan = document.getElementById('cartCount');
+    const cartTotalSpan = document.getElementById('cartTotalPrice');
+    const cartSidebar = document.getElementById('cartSidebar');
+    const overlay = document.getElementById('overlay');
+    const toastMsg = document.getElementById('toastMsg');
+
+    function showToast(t) { toastMsg.innerText = t; toastMsg.style.opacity='1'; setTimeout(()=>toastMsg.style.opacity='0',2000); }
+    function addToCart(name,price) { cart.push({name,price}); updateCartUI(); showToast(translations[currentLang].add_to_cart+" ✓"); }
+    function removeFromCart(idx) { cart.splice(idx,1); updateCartUI(); }
+    function clearCart() { cart = []; updateCartUI(); showToast(translations[currentLang].clear_cart); }
+    function updateCartUI() {
+        let cnt=cart.length, total=cart.reduce((s,i)=>s+i.price,0);
+        cartCountSpan.innerText=cnt; cartTotalSpan.innerText=total.toFixed(2)+" USD";
+        if(cnt===0) cartItemsList.innerHTML=`<div class="empty-cart">${translations[currentLang].empty_cart}</div>`;
+        else cartItemsList.innerHTML=cart.map((item,idx)=>`<div class="cart-item"><span>${item.name}</span><span>${item.price.toFixed(2)} USD</span><span style="cursor:pointer;color:#e67e22;" onclick="removeFromCart(${idx})"><i class="fas fa-trash-alt"></i></span></div>`).join('');
+    }
+    function toggleCart(open) { cartSidebar.classList.toggle('open',open); overlay.classList.toggle('active',open); }
+    function sendOrderToTelegram() {
+        if(cart.length===0){ showToast(translations[currentLang].empty_cart); return; }
+        let text="🛒 НОВЕ ЗАМОВЛЕННЯ AGRONEEW:\n";
+        cart.forEach((item,i)=>text+=`${i+1}. ${item.name} — ${item.price.toFixed(2)} USD\n`);
+        text+=`\n💰 Всього: ${cart.reduce((s,i)=>s+i.price,0).toFixed(2)} USD`;
+        window.open(`https://t.me/agrocan?text=${encodeURIComponent(text)}`,'_blank');
+    }
+    function renderCatalog() {
+        const t=translations[currentLang];
+        catalogGrid.innerHTML=catalogData.map(item=>`
+            <div class="card">
+                <h3>${item.name}</h3>
+                <div><span class="badge">${item.type}</span><span class="badge">⏱ ${item.cycle}</span></div>
+                <p><strong>${t.type_label}:</strong> ${item.type}</p>
+                <p><strong>${t.cycle_label}:</strong> ${item.cycle}</p>
+                <p>${item.description.substring(0,80)}...</p>
+                <div>${item.traits.map(tr=>`<span class="badge">#${tr}</span>`).join('')}</div>
+                <div class="price-tag">${item.price.toFixed(2)} USD</div>
+                <button class="btn-card" data-name="${item.name}" data-price="${item.price}">${t.add_to_cart}</button>
+            </div>
+        `).join('');
+        document.querySelectorAll('.btn-card').forEach(btn=>btn.addEventListener('click',(e)=>{ e.stopPropagation(); addToCart(btn.dataset.name,parseFloat(btn.dataset.price)); }));
+    }
+
+    function updateMarketTable() {
+        const tbody=document.getElementById('marketTbody'); if(!tbody) return;
+        tbody.innerHTML='';
+        marketData.forEach(item=>{
+            let row=tbody.insertRow();
+            row.insertCell(0).innerText=currentLang==='uk'?item.name:item.nameEn;
+            row.insertCell(1).innerText=item.price.toFixed(1);
+            let ch=row.insertCell(2); ch.innerText=(item.change>0?`+${item.change}`:`${item.change}`)+'%';
+            ch.className=item.change>=0?'positive':'negative';
+        });
+        document.getElementById('lastUpdate')&&(document.getElementById('lastUpdate').innerText=new Date().toLocaleTimeString());
+    }
+    function randomizeMarket() {
+        marketData.forEach(item=>{ let d=(Math.random()-0.5)*1.2; item.price=Math.max(80,item.price+d); item.change=parseFloat(d.toFixed(1)); });
+        updateMarketTable(); updateAgroIndex(); updateTickerText(); updatePriceHistory();
+    }
+    function updateAgroIndex() {
+        let delta=(Math.random()-0.5)*12; agroValue=Math.max(800,agroValue+delta);
+        document.getElementById('agroIndexValue').innerText=agroValue.toFixed(1);
+        let percent=(delta/(agroValue-delta))*100, ce=document.getElementById('agroChange');
+        if(percent>=0){ ce.innerHTML=`+${percent.toFixed(2)}% ▲`; ce.className='positive'; }
+        else { ce.innerHTML=`${percent.toFixed(2)}% ▼`; ce.className='negative'; }
+        agroHistory.push(agroValue); if(agroHistory.length>7) agroHistory.shift();
+        if(chartIndex) chartIndex.data.datasets[0].data=agroHistory, chartIndex.update();
+    }
+    function updatePriceHistory() {
+        let avg=marketData.reduce((s,i)=>s+i.price,0)/marketData.length;
+        priceHistory.push(avg); if(priceHistory.length>7) priceHistory.shift();
+        if(chartPrice) chartPrice.data.datasets[0].data=priceHistory, chartPrice.update();
+    }
+    function updateTickerText() {
+        let t=document.getElementById('tickerText'); if(!t) return;
+        let str=marketData.map(c=>`${currentLang==='uk'?c.name:c.nameEn}: ${c.price.toFixed(1)}$`).join('  |  ');
+        let flash=currentLang==='uk'?'🌾 Пшениця оновила максимуми • Новий грант на дрони':(currentLang==='ru'?'🌾 Пшеница обновила максимумы • Новый грант на дроны':'🌾 Wheat hits new highs • New drone grants');
+        t.innerHTML=`<span><i class="fas fa-chart-line"></i> ${str}</span> <span><i class="fas fa-newspaper"></i> ${flash}</span> <span>${str}</span>`;
+    }
+    function updateTrends() { document.getElementById('trendsList').innerText=currentLang==='uk'?'Зростання попиту на сою, дефіцит добрив, цифровізація':(currentLang==='ru'?'Рост спроса на сою, дефицит удобрений, цифровизация':'Soy demand up, fertilizer shortage, digitalization'); }
+    function updateRiskAdvice() {
+        let r=document.getElementById('riskText'), f=document.getElementById('fieldAdvice');
+        if(currentLang==='uk'){ r.innerText='Засуха в південних регіонах, зростання шкідників озимих. Моніторинг вологості критичний.'; f.innerText='Провести підживлення азотом, обробити фунгіцидами.'; }
+        else if(currentLang==='ru'){ r.innerText='Засуха в южных регионах, рост вредителей озимых. Мониторинг влажности критичен.'; f.innerText='Провести подкормку азотом, обработать фунгицидами.'; }
+        else{ r.innerText='Drought in southern regions, pests on winter crops. Critical moisture monitoring.'; f.innerText='Apply nitrogen top dressing, fungicides at first signs.'; }
+    }
+    function renderNewsTech() {
+        let newsGrid=document.getElementById('newsGrid'), techGrid=document.getElementById('techGrid');
+        if(newsGrid) newsGrid.innerHTML=['news1','news2','news3'].map(k=>`<div class="card"><i class="fas fa-newspaper"></i><h3>${translations[currentLang][k]}</h3><p>${currentLang==='uk'?'Оновлено 2 години тому':(currentLang==='ru'?'Обновлено 2 часа назад':'Updated 2h ago')}</p><div class="badge">${currentLang==='uk'?'Читати':(currentLang==='ru'?'Читать':'Read')}</div></div>`).join('');
+        if(techGrid) techGrid.innerHTML=['tech1','tech2','tech3'].map(k=>`<div class="card"><i class="fas fa-microchip"></i><h3>${translations[currentLang][k]}</h3><p>${currentLang==='uk'?'Інновації для точного землеробства':(currentLang==='ru'?'Инновации для точного земледелия':'Innovations for precision farming')}</p><div class="badge">${currentLang==='uk'?'Актуально':(currentLang==='ru'?'Актуально':'Trending')}</div></div>`).join('');
+    }
+    function mockWeather() {
+        let temp=Math.floor(18+Math.random()*10);
+        document.getElementById('weatherTemp')&&(document.getElementById('weatherTemp').innerHTML=`+${temp}°C`);
+        let cond=currentLang==='uk'?['Сонячно','Мінлива хмарність','Невеликий дощ']:(currentLang==='ru'?['Солнечно','Переменная облачность','Небольшой дождь']:['Sunny','Partly cloudy','Light rain']);
+        document.getElementById('weatherDesc')&&(document.getElementById('weatherDesc').innerHTML=cond[Math.floor(Math.random()*3)]);
+        document.getElementById('weatherRegion')&&(document.getElementById('weatherRegion').innerHTML=currentLang==='uk'?'Чернігівщина, UA':(currentLang==='ru'?'Черноземье, RU':'Chernihiv region, UA'));
+        document.getElementById('weatherAdvice')&&(document.getElementById('weatherAdvice').innerHTML=currentLang==='uk'?'Рекомендовано полив':(currentLang==='ru'?'Рекомендуется полив':'Irrigation recommended'));
+    }
+
+    function showSection(sectionId) {
+        document.getElementById('newsSection').style.display=sectionId==='news'?'block':'none';
+        document.getElementById('analyticsSection').style.display=sectionId==='analytics'?'block':'none';
+        document.getElementById('techSection').style.display=sectionId==='tech'?'block':'none';
+        document.getElementById('catalogSection').style.display=sectionId==='catalog'?'block':'none';
+        document.querySelectorAll('.nav-links a, .cta-group .btn').forEach(btn=>btn.classList.remove('active'));
+        document.querySelectorAll(`.nav-links a[data-section="${sectionId}"], .cta-group .btn[data-section="${sectionId}"]`).forEach(btn=>btn.classList.add('active'));
+        let el=document.getElementById(`${sectionId}Section`);
+        if(el && el.style.display!=='none') el.scrollIntoView({behavior:'smooth',block:'start'});
+        else window.scrollTo({top:0,behavior:'smooth'});
+    }
 
     function setLanguage(lang) {
-        currentLang = lang;
-        document.querySelectorAll('[data-i18n]').forEach(el => {
-            const key = el.getAttribute('data-i18n');
-            if (translations[lang][key]) el.innerText = translations[lang][key];
-        });
-        document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
-            const key = el.getAttribute('data-i18n-placeholder');
-            if (translations[lang][key]) el.placeholder = translations[lang][key];
-        });
-        // обновляем динамические контенты (seed cards, новости, технологии)
-        renderSeedsCards();
-        renderNewsCards();
-        renderTechCards();
-        updateTrendsText();
-        updateRiskAndAdvice();
-        document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
+        currentLang=lang;
+        document.querySelectorAll('[data-i18n]').forEach(el=>{ let k=el.getAttribute('data-i18n'); if(translations[lang][k]) el.innerText=translations[lang][k]; });
+        document.querySelectorAll('[data-i18n-placeholder]').forEach(el=>{ let k=el.getAttribute('data-i18n-placeholder'); if(translations[lang][k]) el.placeholder=translations[lang][k]; });
+        renderCatalog(); renderNewsTech(); updateMarketTable(); updateTrends(); updateRiskAdvice(); updateCartUI(); mockWeather();
+        document.querySelectorAll('.lang-btn').forEach(btn=>btn.classList.remove('active'));
         document.querySelector(`.lang-btn[data-lang="${lang}"]`).classList.add('active');
     }
 
-    // имитация живых данных рынка, агроиндекса, бегущей строки
-    let marketData = [
-        { name: "Пшеница (3 класс)", price: 245.5, change: 2.1, nameEn: "Wheat (class 3)" },
-        { name: "Кукуруза", price: 218.3, change: -0.7, nameEn: "Corn" },
-        { name: "Подсолнечник", price: 512.0, change: 1.4, nameEn: "Sunflower" },
-        { name: "Ячмень", price: 198.2, change: -0.2, nameEn: "Barley" }
-    ];
-    function updateMarketTable() {
-        const tbody = document.getElementById('marketTbody');
-        tbody.innerHTML = '';
-        marketData.forEach(item => {
-            const row = tbody.insertRow();
-            const cropName = currentLang === 'ru' ? item.name : (item.nameEn || item.name);
-            row.insertCell(0).innerText = cropName;
-            row.insertCell(1).innerText = item.price.toFixed(1);
-            const changeCell = row.insertCell(2);
-            changeCell.innerText = (item.change > 0 ? `+${item.change}` : `${item.change}`) + '%';
-            changeCell.className = item.change >= 0 ? 'positive' : 'negative';
-        });
-        document.getElementById('lastUpdate').innerText = new Date().toLocaleTimeString();
+    function initCharts() {
+        let ctxIdx=document.getElementById('indexChart').getContext('2d');
+        chartIndex=new Chart(ctxIdx,{type:'line',data:{labels:['Д-6','Д-5','Д-4','Д-3','Д-2','Д-1','Сьогодні'],datasets:[{label:'Агро індекс',data:agroHistory,borderColor:'#D4AF37',backgroundColor:'rgba(212,175,55,0.1)',fill:true,tension:0.3}]},options:{responsive:true,maintainAspectRatio:true,plugins:{legend:{labels:{color:'#EFF3E8'}}}}});
+        let ctxPr=document.getElementById('priceChart').getContext('2d');
+        chartPrice=new Chart(ctxPr,{type:'line',data:{labels:['Т-6','Т-5','Т-4','Т-3','Т-2','Т-1','Сьогодні'],datasets:[{label:'Середня ціна зернових (USD/т)',data:priceHistory,borderColor:'#4CAF50',backgroundColor:'rgba(76,175,80,0.1)',fill:true,tension:0.3}]},options:{responsive:true,maintainAspectRatio:true,plugins:{legend:{labels:{color:'#EFF3E8'}}}}});
     }
-    function randomizeMarket() {
-        marketData.forEach(item => {
-            let delta = (Math.random() - 0.5) * 1.2;
-            item.price = Math.max(80, item.price + delta);
-            item.change = parseFloat(delta.toFixed(1));
-        });
-        updateMarketTable();
-        updateAgroIndex();
-        updateTickerText();
-    }
-    let agroValue = 1245.67;
-    function updateAgroIndex() {
-        let deltaIdx = (Math.random() - 0.5) * 12;
-        agroValue = Math.max(800, agroValue + deltaIdx);
-        document.getElementById('agroIndexValue').innerText = agroValue.toFixed(1);
-        let changePercent = (deltaIdx / (agroValue - deltaIdx)) * 100;
-        let changeElem = document.getElementById('agroChange');
-        if (changePercent >= 0) {
-            changeElem.innerHTML = `+${changePercent.toFixed(2)}% ▲`;
-            changeElem.className = 'positive';
-        } else {
-            changeElem.innerHTML = `${changePercent.toFixed(2)}% ▼`;
-            changeElem.className = 'negative';
-        }
-    }
-    // бегущая строка
-    function updateTickerText() {
-        const tickerDiv = document.getElementById('tickerText');
-        let pricesStr = marketData.map(c => `${currentLang === 'ru' ? c.name : (c.nameEn || c.name)}: ${c.price.toFixed(1)}$`).join('  |  ');
-        let newsFlash = currentLang === 'ru' ? '🌾 Пшеница обновила максимумы  •  Новый грант на дроны  •  Уборочная стартует' : '🌾 Wheat hits new highs  •  New drone grants  •  Harvest begins';
-        tickerDiv.innerHTML = `<span><i class="fas fa-chart-line"></i> ${pricesStr}</span> <span><i class="fas fa-newspaper"></i> ${newsFlash}</span> <span><i class="fas fa-chart-line"></i> ${pricesStr}</span>`;
-    }
-    function updateTrendsText() {
-        const trends = currentLang === 'ru' ? 'Рост спроса на сою, дефицит удобрений, цифровизация ферм' : 'Soy demand up, fertilizer shortage, farm digitalization';
-        document.getElementById('trendsList').innerText = trends;
-    }
-    function updateRiskAndAdvice() {
-        if(currentLang === 'ru') {
-            document.getElementById('riskText').innerText = 'Засуха в южных регионах, рост вредителей озимых. Мониторинг влажности критичен.';
-            document.getElementById('fieldAdvice').innerText = 'Провести подкормку азотом, обработать фунгицидами при первых признаках.';
-        } else {
-            document.getElementById('riskText').innerText = 'Drought in southern regions, pests on winter crops. Critical moisture monitoring.';
-            document.getElementById('fieldAdvice').innerText = 'Apply nitrogen top dressing, fungicides at first signs.';
-        }
-    }
-    // Рендер карточек семян, новостей, технологий с учетом языка
-    function renderSeedsCards() {
-        const seedsContainer = document.getElementById('seedsGrid');
-        const seeds = [
-            { nameKey: 'seed1', descKey: 'seed1_desc', icon: 'fas fa-seedling' },
-            { nameKey: 'seed2', descKey: 'seed2_desc', icon: 'fas fa-tractor' },
-            { nameKey: 'seed3', descKey: 'seed3_desc', icon: 'fas fa-sun-plant-wilt' }
-        ];
-        seedsContainer.innerHTML = seeds.map(s => `
-            <div class="card">
-                <i class="${s.icon}"></i>
-                <h3>${translations[currentLang][s.nameKey]}</h3>
-                <p>${translations[currentLang][s.descKey]}</p>
-                <div class="badge">${currentLang === 'ru' ? 'Новинка' : 'New'}</div>
-            </div>
-        `).join('');
-    }
-    function renderNewsCards() {
-        const newsContainer = document.getElementById('newsGrid');
-        const newsArr = ['news1', 'news2', 'news3'];
-        newsContainer.innerHTML = newsArr.map(k => `
-            <div class="card">
-                <i class="fas fa-newspaper"></i>
-                <h3>${translations[currentLang][k]}</h3>
-                <p>${currentLang === 'ru' ? 'Обновлено 2 часа назад • Аналитика' : 'Updated 2h ago • Analytics'}</p>
-                <div class="badge">${currentLang === 'ru' ? 'Читать' : 'Read'}</div>
-            </div>
-        `).join('');
-    }
-    function renderTechCards() {
-        const techContainer = document.getElementById('techGrid');
-        const techArr = ['tech1', 'tech2', 'tech3'];
-        techContainer.innerHTML = techArr.map(k => `
-            <div class="card">
-                <i class="fas fa-microchip"></i>
-                <h3>${translations[currentLang][k]}</h3>
-                <p>${currentLang === 'ru' ? 'Инновации для точного земледелия' : 'Innovations for precision farming'}</p>
-                <div class="badge">${currentLang === 'ru' ? 'Актуально' : 'Trending'}</div>
-            </div>
-        `).join('');
-    }
-    // автоопределение языка
-    function detectLanguage() {
-        const browserLang = navigator.language || navigator.userLanguage;
-        if (browserLang.startsWith('en')) return 'en';
-        return 'ru';
-    }
-    // имитация погоды
-    function mockWeather() {
-        const temp = Math.floor(18 + Math.random() * 10);
-        document.getElementById('weatherTemp').innerHTML = `+${temp}°C`;
-        const conditions = currentLang === 'ru' ? ['Солнечно', 'Переменная облачность', 'Легкий дождь'] : ['Sunny', 'Partly cloudy', 'Light rain'];
-        const desc = conditions[Math.floor(Math.random()*3)];
-        document.getElementById('weatherDesc').innerHTML = desc;
-    }
-    // запуск live-обновлений
-    setInterval(() => {
-        randomizeMarket();
-        mockWeather();
-        updateTickerText();
-        updateAgroIndex();
-    }, 10000);
-    
-    // инициализация
+
     function init() {
-        const detected = detectLanguage();
-        setLanguage(detected);
-        updateMarketTable();
-        updateAgroIndex();
-        updateTickerText();
-        updateTrendsText();
-        mockWeather();
-        renderSeedsCards();
-        renderNewsCards();
-        renderTechCards();
-        document.querySelectorAll('.lang-btn').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                const lang = btn.getAttribute('data-lang');
-                setLanguage(lang);
-                updateMarketTable(); 
-                updateTrendsText();
-                updateRiskAndAdvice();
-                mockWeather();
-                updateTickerText();
-            });
-        });
+        setLanguage('uk');
+        renderCatalog(); renderNewsTech(); updateMarketTable(); updateAgroIndex(); updateTickerText(); updateTrends(); mockWeather(); initCharts();
+        setInterval(()=>{ randomizeMarket(); mockWeather(); updateTickerText(); },10000);
+        document.querySelectorAll('.lang-btn').forEach(btn=>btn.addEventListener('click',()=>setLanguage(btn.getAttribute('data-lang'))));
+        document.querySelectorAll('.nav-links a, .cta-group .btn').forEach(btn=>btn.addEventListener('click',(e)=>{ let sec=btn.getAttribute('data-section'); if(sec) showSection(sec); }));
+        document.getElementById('cartIcon').addEventListener('click',()=>toggleCart(true));
+        document.getElementById('closeCartBtn').addEventListener('click',()=>toggleCart(false));
+        document.getElementById('overlay').addEventListener('click',()=>toggleCart(false));
+        document.getElementById('clearCartBtn').addEventListener('click',()=>clearCart());
+        document.getElementById('checkoutTelegramBtn').addEventListener('click',sendOrderToTelegram);
+        document.querySelectorAll('.faq-question').forEach(q=>q.addEventListener('click',()=>q.parentElement.classList.toggle('open')));
+        showSection('catalog');
     }
+    window.removeFromCart=removeFromCart;
     init();
 </script>
 </body>
