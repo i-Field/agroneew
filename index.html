@@ -4,10 +4,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>AGRONEEW | Агро нового часу | Генетика, ринки, технології</title>
-    <!-- Favicon з репозиторію (raw) -->
+    <!-- Favicon -->
     <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/i-Field/agroneew/main/favicon.png">
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='45' fill='%231a2e1a' stroke='%23D4AF37' stroke-width='2'/%3E%3Cpath fill='%234CAF50' d='M50 30 L65 55 L35 55 Z'/%3E%3Cpath fill='%23D4AF37' d='M50 70 L35 45 L65 45 Z'/%3E%3C/svg%3E">
     <meta name="description" content="Агро нового часу: ринки, генетика, технології, аналітика. Щоденний інструмент фермера та інвестора.">
+    <!-- Open Graph / Social Media (красиве посилання) -->
+    <meta property="og:title" content="AGRONEEW — Агро нового часу | Генетика, ринки, технології">
+    <meta property="og:description" content="Агро-платформа нового покоління: каталог генетики, живі ціни, аналітика, технології. Зручне замовлення в Telegram.">
+    <meta property="og:image" content="https://raw.githubusercontent.com/i-Field/agroneew/main/favicon.png">
+    <meta property="og:image:width" content="512">
+    <meta property="og:image:height" content="512">
+    <meta property="og:url" content="https://i-field.github.io/agroneew/">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="AGRONEEW — Агро нового часу">
+    <meta name="twitter:description" content="Каталог генетики, ринкові індекси, замовлення через Telegram.">
+    <meta name="twitter:image" content="https://raw.githubusercontent.com/i-Field/agroneew/main/favicon.png">
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
@@ -131,7 +143,7 @@
     </div>
     <div class="ticker"><div class="ticker-content" id="tickerText"></div></div>
     <div class="container">
-        <!-- Блоки індексу та погоди (завжди видимі) -->
+        <!-- Блоки індексу та погоди -->
         <div class="row-2col">
             <div class="market-panel">
                 <div class="flex-between"><h3><i class="fas fa-chart-line"></i> <span data-i18n="agro_index">Агро індекс дня</span></h3><span class="badge" data-i18n="live">LIVE</span></div>
@@ -159,11 +171,11 @@
             </div>
         </div>
 
-        <!-- АНАЛІТИКА (ринок + ризики + графік + прогноз) -->
+        <!-- АНАЛІТИКА -->
         <div id="analyticsSection" class="section" style="display: none;">
             <div class="market-panel">
                 <h3><i class="fas fa-chart-simple"></i> <span data-i18n="market_today">Ринок сьогодні</span> <span style="font-size:0.8rem;" id="lastUpdate"></span></h3>
-                <table class="price-table"><thead><tr><th data-i18n="crop">Культура</th><th data-i18n="price">Ціна (USD/т)</th><th data-i18n="change">Змін.</th></tr></thead><tbody id="marketTbody"></tbody></table>
+                <table class="price-table"><thead><tr><th data-i18n="crop">Культура</th><th data-i18n="price">Ціна (USD/т)</th><th data-i18n="change">Змін.</th><tr></thead><tbody id="marketTbody"></tbody></table>
                 <div><span data-i18n="trends_week">🌾 Тренди тижня:</span> <span id="trendsList"></span></div>
                 <canvas id="priceChart" width="400" height="120"></canvas>
             </div>
@@ -188,13 +200,13 @@
             </div>
         </div>
 
-        <!-- КАТАЛОГ ГЕНЕТИКИ (видимий за замовчуванням) -->
+        <!-- КАТАЛОГ ГЕНЕТИКИ -->
         <div id="catalogSection" class="section">
             <h2 class="section-title" data-i18n="catalog_title">🧬 Каталог агро-генетики</h2>
             <div id="catalogGrid" class="grid-cards"></div>
         </div>
 
-        <!-- FAQ блок -->
+        <!-- FAQ -->
         <div class="section">
             <h2 class="section-title" data-i18n="faq_title">❓ Часті питання</h2>
             <div class="faq-item"><div class="faq-question"><span data-i18n="faq1_q">Як замовити насіння?</span><i class="fas fa-chevron-down"></i></div><div class="faq-answer" data-i18n="faq1_a">Додайте товари в кошик, натисніть «Оформити замовлення в Telegram» — ми зв'яжемося з вами для уточнення деталей та оплати.</div></div>
@@ -222,7 +234,7 @@
 </div>
 
 <script>
-    // ---------- КАТАЛОГ (ТІЛЬКИ ВКАЗАНІ СОРТИ) ----------
+    // ----------------------------- КАТАЛОГ (5 СОРТІВ) -----------------------------
     const catalogData = [
         { name: "Oreshnik Seeds", type: "Auto / Regular", traits: ["fast","unpretentious","northern climate","stable genetics"], cycle: "2 months", description: "Stable genetics line for harsh climates, high resin production. Ideal for northern regions.", price: 49.99, yield: "450-550 g/m²", height: "100-140 cm" },
         { name: "Hutor Seeds", type: "Auto / Regular", traits: ["resilient","outdoor","fast growth","unpretentious"], cycle: "2 months", description: "Rural selection genetics, perfect for open ground. Excellent mold resistance.", price: 44.99, yield: "500-600 g/m²", height: "90-120 cm" },
@@ -231,7 +243,7 @@
         { name: "New Genetics Line: CBD 1:1 THC", type: "CBD/THC 1:1", traits: ["medical","balanced","low psychoactivity","stable genetics"], cycle: "2 months", description: "Equal parts CBD and THC for therapeutic effect without intoxication. High terpene profile.", price: 69.99, yield: "400-500 g/m²", height: "100-130 cm" }
     ];
 
-    // ---------- МУЛЬТИМОВНІСТЬ (UK, RU, EN) ----------
+    // ----------------------------- МУЛЬТИМОВНІСТЬ (UK, RU, EN) -----------------------------
     const translations = {
         uk: {
             hero_title: "Агро нового часу", hero_desc: "Ринки. Генетика. Технології. Аналітика. В одному потоці.", btn_news: "Новини", btn_catalog: "Каталог генетики", btn_analytics: "Аналітика",
@@ -311,7 +323,7 @@
     let agroValue = 1245.67;
     let chartIndex, chartPrice;
 
-    // DOM
+    // DOM elements
     const catalogGrid = document.getElementById('catalogGrid');
     const cartItemsList = document.getElementById('cartItemsList');
     const cartCountSpan = document.getElementById('cartCount');
@@ -320,6 +332,7 @@
     const overlay = document.getElementById('overlay');
     const toastMsg = document.getElementById('toastMsg');
 
+    // Helper functions
     function showToast(t) { toastMsg.innerText = t; toastMsg.style.opacity='1'; setTimeout(()=>toastMsg.style.opacity='0',2000); }
     function addToCart(name,price) { cart.push({name,price}); updateCartUI(); showToast(translations[currentLang].add_to_cart+" ✓"); }
     function removeFromCart(idx) { cart.splice(idx,1); updateCartUI(); }
@@ -355,6 +368,7 @@
         document.querySelectorAll('.btn-card').forEach(btn=>btn.addEventListener('click',(e)=>{ e.stopPropagation(); addToCart(btn.dataset.name,parseFloat(btn.dataset.price)); }));
     }
 
+    // Market & weather simulation
     function updateMarketTable() {
         const tbody=document.getElementById('marketTbody'); if(!tbody) return;
         tbody.innerHTML='';
@@ -412,6 +426,7 @@
         document.getElementById('weatherAdvice')&&(document.getElementById('weatherAdvice').innerHTML=currentLang==='uk'?'Рекомендовано полив':(currentLang==='ru'?'Рекомендуется полив':'Irrigation recommended'));
     }
 
+    // Navigation
     function showSection(sectionId) {
         document.getElementById('newsSection').style.display=sectionId==='news'?'block':'none';
         document.getElementById('analyticsSection').style.display=sectionId==='analytics'?'block':'none';
@@ -424,6 +439,7 @@
         else window.scrollTo({top:0,behavior:'smooth'});
     }
 
+    // Language
     function setLanguage(lang) {
         currentLang=lang;
         document.querySelectorAll('[data-i18n]').forEach(el=>{ let k=el.getAttribute('data-i18n'); if(translations[lang][k]) el.innerText=translations[lang][k]; });
@@ -433,6 +449,7 @@
         document.querySelector(`.lang-btn[data-lang="${lang}"]`).classList.add('active');
     }
 
+    // Charts
     function initCharts() {
         let ctxIdx=document.getElementById('indexChart').getContext('2d');
         chartIndex=new Chart(ctxIdx,{type:'line',data:{labels:['Д-6','Д-5','Д-4','Д-3','Д-2','Д-1','Сьогодні'],datasets:[{label:'Агро індекс',data:agroHistory,borderColor:'#D4AF37',backgroundColor:'rgba(212,175,55,0.1)',fill:true,tension:0.3}]},options:{responsive:true,maintainAspectRatio:true,plugins:{legend:{labels:{color:'#EFF3E8'}}}}});
@@ -440,6 +457,7 @@
         chartPrice=new Chart(ctxPr,{type:'line',data:{labels:['Т-6','Т-5','Т-4','Т-3','Т-2','Т-1','Сьогодні'],datasets:[{label:'Середня ціна зернових (USD/т)',data:priceHistory,borderColor:'#4CAF50',backgroundColor:'rgba(76,175,80,0.1)',fill:true,tension:0.3}]},options:{responsive:true,maintainAspectRatio:true,plugins:{legend:{labels:{color:'#EFF3E8'}}}}});
     }
 
+    // Initialization
     function init() {
         setLanguage('uk');
         renderCatalog(); renderNewsTech(); updateMarketTable(); updateAgroIndex(); updateTickerText(); updateTrends(); mockWeather(); initCharts();
